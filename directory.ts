@@ -21,7 +21,7 @@ const getUser: (string) => Promise<User> = async (userId) => {
       },
     });
 
-    const result: User = response.data && response.data.result;
+    const result: User = response.data?.result;
     return result;
   } catch (error) {
     console.error(`getUser: caught exception: ${error}`);
@@ -45,7 +45,7 @@ const getUserIdByUserSub: (string) => Promise<string> = async (userSub) => {
       }),
     });
 
-    const result: string = response.data && response.data.id;
+    const result: string = response.data?.id;
     return result;
   } catch (error) {
     console.error(`getUser: caught exception: ${error}`);
