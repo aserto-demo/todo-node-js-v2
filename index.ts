@@ -1,13 +1,14 @@
 import { Todo } from "./interfaces";
 
-const express = require("express");
-const cors = require("cors");
-const jwt = require("express-jwt");
-const jwksRsa = require("jwks-rsa");
-const { jwtAuthz, is } = require("express-jwt-aserto");
-const { getUserByUserSub } = require("./directory");
-
-const { initDb, getTodos, insertTodo, updateTodo, deleteTodo } = require("./store");
+import express = require("express");
+import cors = require("cors");
+import jwt = require("express-jwt");
+import jwksRsa = require("jwks-rsa");
+import aserto = require("express-jwt-aserto");
+import { getUserByUserSub } from "./directory";
+import { initDb, getTodos, insertTodo, updateTodo, deleteTodo } from "./store";
+import { UserCache, User } from "./interfaces";
+const { jwtAuthz, is } = aserto;
 
 const authzOptions = {
   authorizerServiceUrl: process.env.AUTHORIZER_SERVICE_URL,
@@ -18,9 +19,9 @@ const authzOptions = {
 };
 
 //Aserto authorizer middleware function
-const checkAuthz = jwtAuthz(authzOptions);
+const checkAuthz: express.Handler = jwtAuthz(authzOptions);
 
-const checkJwt = jwt({
+const checkJwt: jwt.RequestHandler = jwt({
   // Dynamically provide a signing key based on the kid in the header and the signing keys provided by the JWKS endpoint
   secret: jwksRsa.expressJwtSecret({
     cache: true,
@@ -35,18 +36,20 @@ const checkJwt = jwt({
   algorithms: ["RS256"],
 });
 
-const app = express();
+const app: express.Application = express();
 app.use(express.json());
 app.use(cors());
 
 const PORT = 3001;
 
 //Users cache
-const users = {};
+const users: UserCache = {};
 
 app.get("/user/:sub", checkJwt, checkAuthz, async (req, res) => {
   const { sub } = req.params;
-  const user = users[sub] ? users[sub] : await getUserByUserSub(sub);
+  const user: User = users[sub] ? users[sub] : await getUserByUserSub(sub);
+
+  //Fill cache
   users[sub] = user;
   res.json(user);
 });
@@ -64,8 +67,8 @@ app.post("/todo", checkJwt, checkAuthz, async (req, res) => {
   const todo: Todo = req.body;
   try {
     await insertTodo(todo);
-    res.json({msg: "Todo created"});
-  } catch (error){
+    res.json({ msg: "Todo created" });
+  } catch (error) {
     res.status(500).send(error);
   }
 });
@@ -99,9 +102,9 @@ app.put(
     const todo: Todo = req.body;
     try {
       await updateTodo(todo);
-      res.json({msg: "Todo updated"});
-    } catch ( error ) {
-      res.status(500).send( error);
+      res.json({ msg: "Todo updated" });
+    } catch (error) {
+      res.status(500).send(error);
     }
   }
 );
@@ -133,10 +136,10 @@ app.delete(
   },
   async (req, res) => {
     const todo: Todo = req.body;
-    try{
+    try {
       deleteTodo(todo);
-      res.json({msg: "Todo deleted"});
-    } catch (e){
+      res.json({ msg: "Todo deleted" });
+    } catch (e) {
       res.status(500).send(e);
     }
   }
@@ -146,6 +149,4 @@ initDb().then(() => {
   app.listen(PORT, () => {
     console.log(`⚡️[server]: Server is running at http://localhost:${PORT}`);
   });
-})
-
-
+});
