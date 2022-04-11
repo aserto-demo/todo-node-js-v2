@@ -5,10 +5,10 @@ import cors = require("cors");
 import jwt = require("express-jwt");
 import jwksRsa = require("jwks-rsa");
 import aserto = require("express-jwt-aserto");
-import { getUserByUserSub } from "./directory";
+import { getUserByUserID } from "./directory";
 import { initDb, getTodos, insertTodo, updateTodo, deleteTodo } from "./store";
 import { UserCache, User } from "./interfaces";
-const { jwtAuthz, is } = aserto;
+const { jwtAuthz } = aserto;
 
 const authzOptions = {
   authorizerServiceUrl: process.env.AUTHORIZER_SERVICE_URL,
@@ -45,12 +45,12 @@ const PORT = 3001;
 //Users cache
 const users: UserCache = {};
 
-app.get("/user/:sub", checkJwt, checkAuthz, async (req, res) => {
-  const { sub } = req.params;
-  const user: User = users[sub] ? users[sub] : await getUserByUserSub(sub);
+app.get("/user/:userID", checkJwt, checkAuthz, async (req, res) => {
+  const { userID } = req.params;
+  const user: User = users[userID] ? users[userID] : await getUserByUserID(userID);
 
   //Fill cache
-  users[sub] = user;
+  users[userID] = user;
   res.json(user);
 });
 
@@ -74,30 +74,9 @@ app.post("/todo", checkJwt, checkAuthz, async (req, res) => {
 });
 
 app.put(
-  "/todo",
+  "/todo/:ownerID",
   checkJwt,
-  async (req, res, next) => {
-    try {
-      const allowed = await is(
-        "allowed",
-        req,
-        {
-          ...authzOptions,
-        },
-        "todo.PUT.todo",
-        {
-          ownerEmail: req.body.UserEmail,
-        }
-      );
-      if (allowed) {
-        next();
-      } else {
-        res.status(403).send("Unauthorized");
-      }
-    } catch (e) {
-      res.status(500).send(e.message);
-    }
-  },
+  checkAuthz,
   async (req, res) => {
     const todo: Todo = req.body;
     try {
@@ -110,30 +89,9 @@ app.put(
 );
 
 app.delete(
-  "/todo",
+  "/todo/:ownerID",
   checkJwt,
-  async (req, res, next) => {
-    try {
-      const allowed = await is(
-        "allowed",
-        req,
-        {
-          ...authzOptions,
-        },
-        "todo.DELETE.todo",
-        {
-          ownerEmail: req.body.UserEmail,
-        }
-      );
-      if (allowed) {
-        next();
-      } else {
-        res.status(403).send("Unauthorized");
-      }
-    } catch (e) {
-      res.status(500).send(e.message);
-    }
-  },
+  checkAuthz,
   async (req, res) => {
     const todo: Todo = req.body;
     try {

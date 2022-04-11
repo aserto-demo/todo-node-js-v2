@@ -2,8 +2,7 @@ export interface Todo {
   ID: string;
   Title: string;
   Completed: boolean;
-  UserEmail: string;
-  UserSub: string;
+  OwnerID: string;
 }
 
 export interface User {

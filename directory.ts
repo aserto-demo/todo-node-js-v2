@@ -53,9 +53,9 @@ const getUserIdByUserSub: (string) => Promise<string> = async (userSub) => {
   }
 };
 
-const getUserByUserSub: (string) => Promise<User> = async (userSub) => {
+const getUserByUserID: (string) => Promise<User> = async (userSub) => {
   const userId = await getUserIdByUserSub(userSub);
   return await getUser(userId);
 };
 
-export { getUserByUserSub };
+export { getUserByUserID };

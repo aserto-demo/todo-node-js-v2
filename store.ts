@@ -11,8 +11,7 @@ export const initDb: () => Promise<void> = async () => {
           ID TEXT PRIMARY KEY,
           Title TEXT NOT NULL,
           Completed BOOLEAN NOT NULL,
-          UserEmail TEXT NOT NULL,
-          UserSub TEXT NOT NULL
+          OwnerID TEXT NOT NULL
       );`
         )
           .run()
@@ -35,15 +34,14 @@ export const getTodos: () => Promise<Todo[]> = async () => {
 
 export const insertTodo: (Todo) => Promise<void> = async (todo: Todo) => {
   return new Promise((resolve, reject) => {
-    const { ID, Title, Completed, UserEmail, UserSub } = todo;
+    const { ID, Title, Completed, OwnerID } = todo;
     db.run(
-      "INSERT INTO todos VALUES ($id, $title, $completed, $userEmail, $userSub)",
+      "INSERT INTO todos VALUES ($id, $title, $completed, $ownerID)",
       {
         $id: ID,
         $title: Title,
         $completed: Completed ? 1 : 0,
-        $userEmail: UserEmail,
-        $userSub: UserSub,
+        $ownerID: OwnerID,
       },
       function (err: Error) {
         err ? reject(err) : resolve();
@@ -54,10 +52,10 @@ export const insertTodo: (Todo) => Promise<void> = async (todo: Todo) => {
 
 export const updateTodo: (Todo) => Promise<void> = async (todo: Todo) => {
   return new Promise((resolve, reject) => {
-    const { ID, Title, Completed, UserEmail, UserSub } = todo;
+    const { ID, Title, Completed, OwnerID } = todo;
     db.run(
-      "UPDATE todos SET Title=?, Completed=?, UserEmail=?, UserSub=? WHERE ID=?",
-      [Title, Completed, UserEmail, UserSub, ID],
+      "UPDATE todos SET Title=?, Completed=?, OwnerID=? WHERE ID=?",
+      [Title, Completed, OwnerID, ID],
       function (err: Error) {
         err ? reject(err) : resolve();
       }
