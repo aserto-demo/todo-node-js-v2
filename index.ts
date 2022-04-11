@@ -73,11 +73,7 @@ app.post("/todo", checkJwt, checkAuthz, async (req, res) => {
   }
 });
 
-app.put(
-  "/todo/:ownerID",
-  checkJwt,
-  checkAuthz,
-  async (req, res) => {
+app.put("/todo/:ownerID", checkJwt, checkAuthz, async (req, res) => {
     const todo: Todo = req.body;
     try {
       await updateTodo(todo);
@@ -88,11 +84,7 @@ app.put(
   }
 );
 
-app.delete(
-  "/todo/:ownerID",
-  checkJwt,
-  checkAuthz,
-  async (req, res) => {
+app.delete( "/todo/:ownerID", checkJwt, checkAuthz, async (req, res) => {
     const todo: Todo = req.body;
     try {
       deleteTodo(todo);
