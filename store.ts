@@ -1,13 +1,9 @@
 import { Todo } from "./interfaces";
 import sqlite3 = require("sqlite3");
-import fs = require("fs");
-const dbDir = "./db";
-const db = new sqlite3.Database("db/todo.db");
+
+const db = new sqlite3.Database("./todo.db");
 
 export const initDb: () => Promise<void> = async () => {
-  if (!fs.existsSync(dbDir)) {
-    fs.mkdirSync(dbDir);
-  }
   return new Promise((resolve, reject) => {
     try {
       db.serialize(() => {
