@@ -21,7 +21,7 @@ const getUser: (string) => Promise<User> = async (userId) => {
       },
     });
 
-    console.log("RESULT", response);
+    // console.log("RESULT", response);
 
     const result: User = response.data?.result;
     return result;
