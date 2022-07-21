@@ -11,11 +11,11 @@ import { UserCache, User } from "./interfaces";
 const { jwtAuthz } = aserto;
 
 const authzOptions = {
-  authorizerServiceUrl: process.env.AUTHORIZER_SERVICE_URL,
-  policyId: process.env.POLICY_ID,
-  policyRoot: process.env.POLICY_ROOT,
-  authorizerApiKey: process.env.AUTHORIZER_API_KEY,
-  tenantId: process.env.TENANT_ID,
+  authorizerServiceUrl: process.env.ASERTO_AUTHORIZER_SERVICE_URL,
+  policyId: process.env.ASERTO_POLICY_ID,
+  policyRoot: process.env.ASERTO_POLICY_ROOT,
+  authorizerApiKey: process.env.ASERTO_AUTHORIZER_API_KEY,
+  tenantId: process.env.ASERTO_TENANT_ID,
 };
 
 //Aserto authorizer middleware function
