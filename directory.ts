@@ -2,9 +2,9 @@ import "dotenv/config";
 import axios from "axios";
 import { User } from "./interfaces";
 
-const authorizerServiceUrl = process.env.AUTHORIZER_SERVICE_URL;
-const tenantId = process.env.TENANT_ID;
-const authorizerApiKey = process.env.AUTHORIZER_API_KEY;
+const authorizerServiceUrl = process.env.ASERTO_AUTHORIZER_SERVICE_URL;
+const tenantId = process.env.ASERTO_TENANT_ID;
+const authorizerApiKey = process.env.ASERTO_AUTHORIZER_API_KEY;
 
 // get a user's profile from the management API
 const getUser: (string) => Promise<User> = async (userId) => {
