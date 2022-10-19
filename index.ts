@@ -4,16 +4,14 @@ import express = require("express");
 import cors = require("cors");
 import jwt = require("express-jwt");
 import jwksRsa = require("jwks-rsa");
-// import aserto = require("express-jwt-aserto");
 import { getUserByUserID } from "./directory";
 import { initDb, getTodos, insertTodo, updateTodo, deleteTodo } from "./store";
 import { UserCache, User } from "./interfaces";
 import * as dotenv from "dotenv";
 
 dotenv.config();
-// const { jwtAuthz } = aserto;
 
-import { is, jwtAuthz } from "aserto-node";
+import { jwtAuthz } from "aserto-node";
 
 const authzOptions = {
   authorizerServiceUrl: process.env.ASERTO_AUTHORIZER_SERVICE_URL,
@@ -47,19 +45,6 @@ app.use(express.json());
 app.use(cors());
 
 const PORT = 3001;
-
-app.get("/", checkJwt, async (req, res) => {
-  // const allowed = "wow";
-  // console.log("IS", is);
-  const allowed = await is(
-    "allowed",
-    req,
-    authzOptions,
-    "todoApp.GET.todos",
-    {}
-  );
-  res.send(`result is ${allowed}`);
-});
 
 //Users cache
 const users: UserCache = {};
