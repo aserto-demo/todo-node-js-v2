@@ -4,18 +4,24 @@ import express = require("express");
 import cors = require("cors");
 import jwt = require("express-jwt");
 import jwksRsa = require("jwks-rsa");
-import aserto = require("express-jwt-aserto");
+// import aserto = require("express-jwt-aserto");
 import { getUserByUserID } from "./directory";
 import { initDb, getTodos, insertTodo, updateTodo, deleteTodo } from "./store";
 import { UserCache, User } from "./interfaces";
-const { jwtAuthz } = aserto;
+import * as dotenv from "dotenv";
+
+dotenv.config();
+// const { jwtAuthz } = aserto;
+
+import { is, jwtAuthz } from "aserto-node";
 
 const authzOptions = {
   authorizerServiceUrl: process.env.ASERTO_AUTHORIZER_SERVICE_URL,
-  policyId: process.env.ASERTO_POLICY_ID,
+  policyName: process.env.ASERTO_POLICY_NAME,
   policyRoot: process.env.ASERTO_POLICY_ROOT,
   authorizerApiKey: process.env.ASERTO_AUTHORIZER_API_KEY,
   tenantId: process.env.ASERTO_TENANT_ID,
+  authorizerCertCAFile: process.env.CA_FILE,
 };
 
 //Aserto authorizer middleware function
@@ -41,6 +47,19 @@ app.use(express.json());
 app.use(cors());
 
 const PORT = 3001;
+
+app.get("/", checkJwt, async (req, res) => {
+  // const allowed = "wow";
+  // console.log("IS", is);
+  const allowed = await is(
+    "allowed",
+    req,
+    authzOptions,
+    "todoApp.GET.todos",
+    {}
+  );
+  res.send(`result is ${allowed}`);
+});
 
 //Users cache
 const users: UserCache = {};
