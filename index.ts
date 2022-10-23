@@ -11,7 +11,7 @@ import * as dotenv from "dotenv";
 
 dotenv.config();
 
-import { jwtAuthz } from "aserto-node";
+import { jwtAuthz } from "@aserto/aserto-node";
 
 const authzOptions = {
   authorizerServiceUrl: process.env.ASERTO_AUTHORIZER_SERVICE_URL,

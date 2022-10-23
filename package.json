@@ -11,7 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "aserto-node": "https://github.com/aserto-dev/aserto-node",
+    "@aserto/aserto-node": "^0.20.8",
     "cors": "^2.8.5",
     "dotenv": "^16.0.0",
     "eslint": "^8.12.0",

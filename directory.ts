@@ -1,7 +1,7 @@
 import "dotenv/config";
 // import axios from "axios";
 import { User } from "./interfaces";
-import { ds } from "aserto-node";
+import { ds } from "@aserto/aserto-node";
 
 const dir = ds(process.env.CA_FILE);
 
