@@ -12,15 +12,9 @@ import * as dotenv from "dotenv";
 dotenv.config();
 
 import { jwtAuthz } from "@aserto/aserto-node";
+import { getConfig } from "./config";
 
-const authzOptions = {
-  authorizerServiceUrl: process.env.ASERTO_AUTHORIZER_SERVICE_URL,
-  policyName: process.env.ASERTO_POLICY_NAME,
-  policyRoot: process.env.ASERTO_POLICY_ROOT,
-  authorizerApiKey: process.env.ASERTO_AUTHORIZER_API_KEY,
-  tenantId: process.env.ASERTO_TENANT_ID,
-  authorizerCertCAFile: process.env.CA_FILE,
-};
+const authzOptions = getConfig();
 
 //Aserto authorizer middleware function
 const checkAuthz: express.Handler = jwtAuthz(authzOptions);
