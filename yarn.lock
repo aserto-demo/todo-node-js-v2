@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@aserto/aserto-node@^0.20.8":
-  version "0.20.8"
-  resolved "https://registry.yarnpkg.com/@aserto/aserto-node/-/aserto-node-0.20.8.tgz#c6d1d385a25144a99bba3b24e295f68b3e183a20"
-  integrity sha512-2vOitxpHnefvR6jTlE8ECYNPf21CITpD2K/YHCzxLX8KBdr/h0SK8nIcXmKByCyAYCN7HReh8YtjA5r8lq13IA==
+"@aserto/aserto-node@^0.20.10":
+  version "0.20.10"
+  resolved "https://registry.yarnpkg.com/@aserto/aserto-node/-/aserto-node-0.20.10.tgz#090ba3fc812df9b817d76dbd62aa9839cc765897"
+  integrity sha512-pMH285/kYVWxeBltRCOinR3BrVo+3mLouCy0w2d6Hlr4ac+VUwLhuamZ65iSPT6myrvjfA4RhidQoIl2zv5VRg==
   dependencies:
     "@aserto/node-authorizer" "https://github.com/aserto-dev/node-authorizer.git"
     "@aserto/node-directory" "https://github.com/aserto-dev/node-directory-v2"
@@ -15,9 +15,9 @@
     jwt-decode "^3.1.2"
     protobufjs "^7.1.2"
 
-"@aserto/node-authorizer@https://github.com/aserto-dev/node-authorizer.git":
+"@aserto/node-authorizer@git+https://github.com/aserto-dev/node-authorizer.git":
   version "0.0.7"
-  resolved "https://github.com/aserto-dev/node-authorizer.git#43b11b9b4be904463876adfb6c266f24615ed3d8"
+  resolved "git+https://github.com/aserto-dev/node-authorizer.git#43b11b9b4be904463876adfb6c266f24615ed3d8"
   dependencies:
     "@grpc/grpc-js" "^1.6.11"
     "@types/google-protobuf" "^3.15.6"
@@ -25,9 +25,9 @@
     grpc-tools "^1.11.2"
     ts-node-dev "^2.0.0"
 
-"@aserto/node-directory@https://github.com/aserto-dev/node-directory-v2":
+"@aserto/node-directory@git+https://github.com/aserto-dev/node-directory-v2.git":
   version "0.0.7"
-  resolved "https://github.com/aserto-dev/node-directory-v2#ccb6571021223c5725a1c050f438de17bf5b4a6f"
+  resolved "git+https://github.com/aserto-dev/node-directory-v2.git#ccb6571021223c5725a1c050f438de17bf5b4a6f"
   dependencies:
     "@grpc/grpc-js" "^1.6.11"
     "@types/google-protobuf" "^3.15.6"
