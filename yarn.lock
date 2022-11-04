@@ -15,9 +15,9 @@
     jwt-decode "^3.1.2"
     protobufjs "^7.1.2"
 
-"@aserto/node-authorizer@git+https://github.com/aserto-dev/node-authorizer.git":
+"@aserto/node-authorizer@https://github.com/aserto-dev/node-authorizer.git":
   version "0.0.7"
-  resolved "git+https://github.com/aserto-dev/node-authorizer.git#43b11b9b4be904463876adfb6c266f24615ed3d8"
+  resolved "https://github.com/aserto-dev/node-authorizer.git#43b11b9b4be904463876adfb6c266f24615ed3d8"
   dependencies:
     "@grpc/grpc-js" "^1.6.11"
     "@types/google-protobuf" "^3.15.6"
@@ -25,9 +25,9 @@
     grpc-tools "^1.11.2"
     ts-node-dev "^2.0.0"
 
-"@aserto/node-directory@git+https://github.com/aserto-dev/node-directory-v2.git":
+"@aserto/node-directory@https://github.com/aserto-dev/node-directory-v2":
   version "0.0.7"
-  resolved "git+https://github.com/aserto-dev/node-directory-v2.git#ccb6571021223c5725a1c050f438de17bf5b4a6f"
+  resolved "https://github.com/aserto-dev/node-directory-v2#ccb6571021223c5725a1c050f438de17bf5b4a6f"
   dependencies:
     "@grpc/grpc-js" "^1.6.11"
     "@types/google-protobuf" "^3.15.6"
