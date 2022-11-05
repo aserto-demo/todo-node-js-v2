@@ -11,13 +11,12 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@aserto/aserto-node": "^0.20.10",
+    "@aserto/aserto-node": "^0.20.11",
     "cors": "^2.8.5",
     "dotenv": "^16.0.0",
     "eslint": "^8.12.0",
     "express": "^4.17.3",
     "express-jwt": "^6.1.1",
-    "express-jwt-aserto": "^1.0.75",
     "jwks-rsa": "^2.0.5",
     "lodash": "^4.17.21",
     "sqlite3": "^5.0.8"

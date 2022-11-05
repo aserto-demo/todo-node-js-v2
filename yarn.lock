@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@aserto/aserto-node@^0.20.10":
-  version "0.20.10"
-  resolved "https://registry.yarnpkg.com/@aserto/aserto-node/-/aserto-node-0.20.10.tgz#090ba3fc812df9b817d76dbd62aa9839cc765897"
-  integrity sha512-pMH285/kYVWxeBltRCOinR3BrVo+3mLouCy0w2d6Hlr4ac+VUwLhuamZ65iSPT6myrvjfA4RhidQoIl2zv5VRg==
+"@aserto/aserto-node@^0.20.11":
+  version "0.20.11"
+  resolved "https://registry.yarnpkg.com/@aserto/aserto-node/-/aserto-node-0.20.11.tgz#aeb1c2de4022d01cef2bfe827c4f51b358d2502b"
+  integrity sha512-zKHAZEjfO+Vg1PVlRzZlhy+wyOzT2aw08lJNvOW2y9VxBxfhD+nnAMeS/fn1C+ZLKPFDvje9K97aRF5RCHHmMg==
   dependencies:
     "@aserto/node-authorizer" "https://github.com/aserto-dev/node-authorizer.git"
     "@aserto/node-directory" "https://github.com/aserto-dev/node-directory-v2"
@@ -15,9 +15,9 @@
     jwt-decode "^3.1.2"
     protobufjs "^7.1.2"
 
-"@aserto/node-authorizer@https://github.com/aserto-dev/node-authorizer.git":
+"@aserto/node-authorizer@git+https://github.com/aserto-dev/node-authorizer.git":
   version "0.0.7"
-  resolved "https://github.com/aserto-dev/node-authorizer.git#43b11b9b4be904463876adfb6c266f24615ed3d8"
+  resolved "git+https://github.com/aserto-dev/node-authorizer.git#43b11b9b4be904463876adfb6c266f24615ed3d8"
   dependencies:
     "@grpc/grpc-js" "^1.6.11"
     "@types/google-protobuf" "^3.15.6"
@@ -25,9 +25,9 @@
     grpc-tools "^1.11.2"
     ts-node-dev "^2.0.0"
 
-"@aserto/node-directory@https://github.com/aserto-dev/node-directory-v2":
+"@aserto/node-directory@git+https://github.com/aserto-dev/node-directory-v2.git":
   version "0.0.7"
-  resolved "https://github.com/aserto-dev/node-directory-v2#ccb6571021223c5725a1c050f438de17bf5b4a6f"
+  resolved "git+https://github.com/aserto-dev/node-directory-v2.git#ccb6571021223c5725a1c050f438de17bf5b4a6f"
   dependencies:
     "@grpc/grpc-js" "^1.6.11"
     "@types/google-protobuf" "^3.15.6"
@@ -614,13 +614,6 @@ async@^1.5.0:
   version "1.5.2"
   resolved "https://registry.npmjs.org/async/-/async-1.5.2.tgz"
   integrity sha1-7GphrlZIDAw8skHJVhjiCJL5Zyo=
-
-axios@^0.21.1:
-  version "0.21.4"
-  resolved "https://registry.npmjs.org/axios/-/axios-0.21.4.tgz"
-  integrity sha512-ut5vewkiu8jjGBdqpM44XxjuCjq9LAKeHVmoVfHVzy8eHgxxq8SbAVQNovDA8mVi05kP0Ea/n/UzcSHcTJQfNg==
-  dependencies:
-    follow-redirects "^1.14.0"
 
 balanced-match@^1.0.0:
   version "1.0.2"
@@ -1216,14 +1209,6 @@ etag@~1.8.1:
   resolved "https://registry.npmjs.org/etag/-/etag-1.8.1.tgz"
   integrity sha1-Qa4u62XvpiJorr/qg6x9eSmbCIc=
 
-express-jwt-aserto@^1.0.75:
-  version "1.0.75"
-  resolved "https://registry.npmjs.org/express-jwt-aserto/-/express-jwt-aserto-1.0.75.tgz"
-  integrity sha512-/KQCedWP0g+M46IGN5veiQKGZhpA4zapCVklhuGPOx77K6ZvZmhHWPVL2cd2gx7A02xBeuvhaqHod3u4SlKUfg==
-  dependencies:
-    axios "^0.21.1"
-    jwt-decode "^3.1.2"
-
 express-jwt@^6.1.1:
   version "6.1.1"
   resolved "https://registry.npmjs.org/express-jwt/-/express-jwt-6.1.1.tgz"
@@ -1397,11 +1382,6 @@ flatted@^3.1.0:
   version "3.2.5"
   resolved "https://registry.yarnpkg.com/flatted/-/flatted-3.2.5.tgz#76c8584f4fc843db64702a6bd04ab7a8bd666da3"
   integrity sha512-WIWGi2L3DyTUvUrwRKgGi9TwxQMUEqPOPQBVi71R96jZXJdFskXEmf54BoZaS1kknGODoIGASGEzBUYdyMCBJg==
-
-follow-redirects@^1.14.0:
-  version "1.14.9"
-  resolved "https://registry.npmjs.org/follow-redirects/-/follow-redirects-1.14.9.tgz"
-  integrity sha512-MQDfihBQYMcyy5dhRDJUHcw7lb2Pv/TuE6xP1vyraLukNDHKbDxDNaOE3NbCAdKQApno+GPRyo1YAp89yCjK4w==
 
 forwarded@0.2.0:
   version "0.2.0"
