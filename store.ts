@@ -33,6 +33,18 @@ export const getTodos: () => Promise<Todo[]> = async () => {
   });
 };
 
+export const getTodo: (Todo) => Promise<Todo|null> = async (todo: Todo) => {
+  return new Promise((resolve, reject) => {
+    const { ID } = todo;
+    db.get("SELECT * FROM todos WHERE ID=$id",
+    {
+      $id: ID,
+    }, function (err: Error, result: Todo) {
+      err ? reject(err) : result ? resolve(result) : resolve(null);
+    });
+  });
+};
+
 export const insertTodo: (Todo) => Promise<void> = async (todo: Todo) => {
   return new Promise((resolve, reject) => {
     const { ID, Title, Completed, OwnerID } = todo;
