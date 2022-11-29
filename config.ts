@@ -8,7 +8,7 @@ const getConfig: () => AuthzOptions = () => {
     ASERTO_TENANT_ID,
     ASERTO_POLICY_INSTANCE_NAME,
     ASERTO_POLICY_INSTANCE_LABEL,
-    CA_FILE,
+    ASERTO_AUTHORIZER_CA_FILE,
   } = process.env;
 
   if (!ASERTO_AUTHORIZER_SERVICE_URL) {
@@ -33,7 +33,9 @@ const getConfig: () => AuthzOptions = () => {
     ...(ASERTO_POLICY_INSTANCE_LABEL && {
       instanceLabel: ASERTO_POLICY_INSTANCE_LABEL,
     }),
-    ...(CA_FILE && { authorizerCertCAFile: CA_FILE }),
+    ...(ASERTO_AUTHORIZER_CA_FILE && {
+      authorizerCertCAFile: ASERTO_AUTHORIZER_CA_FILE,
+    }),
   };
   return authzOptions;
 };

@@ -1,33 +1,39 @@
-import "dotenv/config";
-// import axios from "axios";
 import { User } from "./interfaces";
-import { ds } from "@aserto/aserto-node";
-console.log(process.env.ASERTO_AUTHORIZER_SERVICE_URL);
+import {
+  ds,
+  Directory as DirectoryClient,
+  ServiceConfig,
+} from "@aserto/aserto-node";
 
-const dir = ds(
-  process.env.CA_FILE,
-  process.env.ASERTO_TENANT_ID,
-  process.env.ASERTO_DIRECTORY_API_KEY,
-  process.env.ASERTO_DIRECTORY_SERVICE_URL
-);
+export class Directory {
+  client: DirectoryClient;
 
-const getUserByUserID: (string) => Promise<User> = async (userSub) => {
-  try {
-    const user = await dir.object({
+  constructor(config: ServiceConfig) {
+    const url = config.url ?? process.env.ASERTO_DIRECTORY_SERVICE_URL;
+    const tenantId = config.tenantId ?? process.env.ASERTO_TENANT_ID;
+    const apiKey = config.apiKey ?? process.env.ASERTO_DIRECTORY_API_KEY;
+    const caFile = config.caFile ?? process.env.ASERTO_DIRECTORY_CA_FILE;
+
+    this.client = ds({
+      url,
+      tenantId,
+      apiKey,
+      caFile,
+    });
+  }
+
+  async getUserByUserID(subject: string): Promise<User> {
+    const user = await this.client.object({
       type: "user",
-      key: userSub,
+      key: subject,
     });
     const { email, picture } = user.properties;
     return {
       id: user.id,
+      key: user.key,
       name: user.displayName,
       email,
       picture,
     };
-  } catch (e) {
-    console.log(e);
-    return null;
   }
-};
-
-export { getUserByUserID };
+}
