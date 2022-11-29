@@ -38,8 +38,7 @@ app.use(cors());
 const PORT = 3001;
 
 Store.open().then((store) => {
-  const directory = new Directory({});
-  const server = new Server(store, directory);
+  const server = new Server(store);
 
   //Aserto authorizer middleware function
   const checkAuthz: express.Handler = jwtAuthz(
@@ -54,6 +53,8 @@ Store.open().then((store) => {
       return { ownerID: todo.OwnerID };
     }
   );
+
+  const directory = new Directory({});
 
   //Users cache
   const users: UserCache = {};
