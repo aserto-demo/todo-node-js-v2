@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@aserto/aserto-node@^0.20.11":
-  version "0.20.11"
-  resolved "https://registry.yarnpkg.com/@aserto/aserto-node/-/aserto-node-0.20.11.tgz#aeb1c2de4022d01cef2bfe827c4f51b358d2502b"
-  integrity sha512-zKHAZEjfO+Vg1PVlRzZlhy+wyOzT2aw08lJNvOW2y9VxBxfhD+nnAMeS/fn1C+ZLKPFDvje9K97aRF5RCHHmMg==
+"@aserto/aserto-node@^0.21.0":
+  version "0.21.0"
+  resolved "https://registry.yarnpkg.com/@aserto/aserto-node/-/aserto-node-0.21.0.tgz#3a3630009abfd3229d7b7e1b6efdafd456b39048"
+  integrity sha512-mAQwa8BJG9VKgUlrl0+LWl5WnhrSQwhwnq4RKPcPDnk6nERmXKEG6C6ArDuzFhYUbO0OxRIo2jDzjWuOQDJTHA==
   dependencies:
     "@aserto/node-authorizer" "https://github.com/aserto-dev/node-authorizer.git"
     "@aserto/node-directory" "https://github.com/aserto-dev/node-directory-v2"
@@ -74,9 +74,9 @@
   integrity sha512-k2Ty1JcVojjJFwrg/ThKi2ujJ7XNLYaFGNB/bWT9wGR+oSMJHMa5w+CUq6p/pVrKeNNgA7pCqEcjSnHVoqJQFw==
 
 "@grpc/grpc-js@^1.6.11", "@grpc/grpc-js@^1.7.1":
-  version "1.7.2"
-  resolved "https://registry.yarnpkg.com/@grpc/grpc-js/-/grpc-js-1.7.2.tgz#9bc90a6fce4de001fbbb692ce3528330c03b430b"
-  integrity sha512-MqqbVynbe3VUSnApFW/dpkDaa9T1ASqRnMWeSPGFO/Ro98R7XUDLacfeBa7RaSI1iFu9GYk5gBKARf0zipFe4w==
+  version "1.7.3"
+  resolved "https://registry.yarnpkg.com/@grpc/grpc-js/-/grpc-js-1.7.3.tgz#f2ea79f65e31622d7f86d4b4c9ae38f13ccab99a"
+  integrity sha512-H9l79u4kJ2PVSxUNA08HMYAnUBLj9v6KjYQ7SQ71hOZcEXhShE/y5iQCesP8+6/Ik/7i2O0a10bPquIcYfufog==
   dependencies:
     "@grpc/proto-loader" "^0.7.0"
     "@types/node" ">=12.12.47"
@@ -358,9 +358,9 @@
   integrity sha512-DBZCJbhII3r90XbQxI8Y9IjjiiOGlZ0Hr32omXIZvwwZ7p4DMMXGrKXVyPfuoBOri9XNtL0UK69jYIBIsRX3QQ==
 
 "@types/node@>=12.12.47", "@types/node@>=13.7.0":
-  version "18.11.2"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.11.2.tgz#c59b7641832531264fda3f1ba610362dc9a7dfc8"
-  integrity sha512-BWN3M23gLO2jVG8g/XHIRFWiiV4/GckeFIqbU/C4V3xpoBBWSMk4OZomouN0wCkfQFPqgZikyLr7DOYDysIkkw==
+  version "18.11.10"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.11.10.tgz#4c64759f3c2343b7e6c4b9caf761c7a3a05cee34"
+  integrity sha512-juG3RWMBOqcOuXC643OAdSA525V44cVgGV6dUDuiFtss+8Fk5x1hI93Rsld43VeJVIeqlP9I7Fn9/qaVqoEAuQ==
 
 "@types/qs@*":
   version "6.9.7"
@@ -1558,9 +1558,9 @@ graceful-fs@^4.2.6:
   integrity sha512-9ByhssR2fPVsNZj478qUUbKfmL0+t5BDVyjShtyZZLiK7ZDAArFFfopyOTj0M05wE2tJPisA4iTnnXl2YoPvOA==
 
 grpc-tools@^1.11.2:
-  version "1.11.3"
-  resolved "https://registry.yarnpkg.com/grpc-tools/-/grpc-tools-1.11.3.tgz#8218a86ef994e58bd06330b74033de8d7719ea0d"
-  integrity sha512-cRSK2uhDKHtZ9hLRM35HxaMAMxyh/L7C96Ojt58DhQBdwTOQlV1VIJHSK6X/pDeSQKhaQqWMFfebt8tIcvRfjQ==
+  version "1.12.0"
+  resolved "https://registry.yarnpkg.com/grpc-tools/-/grpc-tools-1.12.0.tgz#9620c6c4566a18ada68a1a87158e1754ef42752a"
+  integrity sha512-OMF6ZR0rLQsCvPrXNGXR/iWZItKm6W2q/uO56WWYRzqZztETaFX82cRDiVCX3JEJeN5+TTKJbXzovb3KZ2HMDA==
   dependencies:
     "@mapbox/node-pre-gyp" "^1.0.5"
 
@@ -1892,7 +1892,7 @@ jws@^3.2.2:
 
 jwt-decode@^3.1.2:
   version "3.1.2"
-  resolved "https://registry.npmjs.org/jwt-decode/-/jwt-decode-3.1.2.tgz"
+  resolved "https://registry.yarnpkg.com/jwt-decode/-/jwt-decode-3.1.2.tgz#3fb319f3675a2df0c2895c8f5e9fa4b67b04ed59"
   integrity sha512-UfpWE/VZn0iP50d8cz9NrZLM9lSWhcJ+0Gt/nm4by88UL+J1SiKN8/5dkjMmbEzwL2CAe+67GsegCbIKtbp75A==
 
 keyv@^3.0.0:
@@ -1983,9 +1983,9 @@ long@^4.0.0:
   integrity sha512-XsP+KhQif4bjX1kbuSiySJFNAehNxgLb6hPRGJ9QsUr8ajHkuXGdrHmFUTUUXhDwVX2R5bY4JNZEwbUiMhV+MA==
 
 long@^5.0.0:
-  version "5.2.0"
-  resolved "https://registry.yarnpkg.com/long/-/long-5.2.0.tgz#2696dadf4b4da2ce3f6f6b89186085d94d52fd61"
-  integrity sha512-9RTUNjK60eJbx3uz+TEGF7fUr29ZDxR5QzXcyDpeSfeH28S9ycINflOgOlppit5U+4kNTe83KQnMEerw7GmE8w==
+  version "5.2.1"
+  resolved "https://registry.yarnpkg.com/long/-/long-5.2.1.tgz#e27595d0083d103d2fa2c20c7699f8e0c92b897f"
+  integrity sha512-GKSNGeNAtw8IryjjkhZxuKB3JzlcLTwjtiQCHKvqQet81I93kXslhDQruGI/QsddO83mcDToBVy7GqGS/zYf/A==
 
 lowercase-keys@^1.0.0, lowercase-keys@^1.0.1:
   version "1.0.1"
