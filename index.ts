@@ -1,32 +1,29 @@
-import { Todo } from "./interfaces";
-
 import express = require("express");
 import cors = require("cors");
-import jwt = require("express-jwt");
+import { expressjwt as jwt, GetVerificationKey } from "express-jwt";
 import jwksRsa = require("jwks-rsa");
-import { getUserByUserID } from "./directory";
-import { initDb, getTodos, insertTodo, updateTodo, deleteTodo } from "./store";
+import { Directory } from "./directory";
+import { Store } from "./store";
+import { Server } from "./server";
 import { UserCache, User } from "./interfaces";
 import * as dotenv from "dotenv";
+import * as dotenvExpand from "dotenv-expand";
 
-dotenv.config();
+dotenvExpand.expand(dotenv.config());
 
 import { jwtAuthz } from "@aserto/aserto-node";
 import { getConfig } from "./config";
 
 const authzOptions = getConfig();
 
-//Aserto authorizer middleware function
-const checkAuthz: express.Handler = jwtAuthz(authzOptions);
-
-const checkJwt: jwt.RequestHandler = jwt({
+const checkJwt = jwt({
   // Dynamically provide a signing key based on the kid in the header and the signing keys provided by the JWKS endpoint
   secret: jwksRsa.expressJwtSecret({
     cache: true,
     rateLimit: true,
     jwksRequestsPerMinute: 5,
     jwksUri: process.env.JWKS_URI,
-  }),
+  }) as GetVerificationKey,
 
   // Validate the audience and the issuer
   audience: process.env.AUDIENCE,
@@ -40,59 +37,43 @@ app.use(cors());
 
 const PORT = 3001;
 
-//Users cache
-const users: UserCache = {};
-app.get("/user/:userID", checkJwt, checkAuthz, async (req, res) => {
-  const { userID } = req.params;
-  const user: User = users[userID]
-    ? users[userID]
-    : await getUserByUserID(userID);
+Store.open().then((store) => {
+  const server = new Server(store);
 
-  //Fill cache
-  users[userID] = user;
-  res.json(user);
-});
+  //Aserto authorizer middleware function
+  const checkAuthz: express.Handler = jwtAuthz(
+    authzOptions,
+    undefined,
+    async (req: express.Request) => {
+      if (!req.params?.id) {
+        return {};
+      }
 
-app.get("/todos", checkJwt, checkAuthz, async (req, res) => {
-  try {
-    const todos: Todo[] = await getTodos();
-    res.json(todos);
-  } catch (error) {
-    res.status(500).send(error);
-  }
-});
+      const todo = await store.get(req.params.id);
+      return { ownerID: todo.OwnerID };
+    }
+  );
 
-app.post("/todo", checkJwt, checkAuthz, async (req, res) => {
-  const todo: Todo = req.body;
-  try {
-    await insertTodo(todo);
-    res.json({ msg: "Todo created" });
-  } catch (error) {
-    res.status(500).send(error);
-  }
-});
+  const directory = new Directory({});
 
-app.put("/todo/:ownerID", checkJwt, checkAuthz, async (req, res) => {
-  const todo: Todo = req.body;
-  try {
-    await updateTodo(todo);
-    res.json({ msg: "Todo updated" });
-  } catch (error) {
-    res.status(500).send(error);
-  }
-});
+  //Users cache
+  const users: UserCache = {};
+  app.get("/users/:userID", checkJwt, checkAuthz, async (req, res) => {
+    const { userID } = req.params;
+    const user: User = users[userID]
+      ? users[userID]
+      : await directory.getUserByUserID(userID);
 
-app.delete("/todo/:ownerID", checkJwt, checkAuthz, async (req, res) => {
-  const todo: Todo = req.body;
-  try {
-    deleteTodo(todo);
-    res.json({ msg: "Todo deleted" });
-  } catch (e) {
-    res.status(500).send(e);
-  }
-});
+    //Fill cache
+    users[userID] = user;
+    res.json(user);
+  });
 
-initDb().then(() => {
+  app.get("/todos", checkJwt, checkAuthz, server.list.bind(server));
+  app.post("/todos", checkJwt, checkAuthz, server.create.bind(server));
+  app.put("/todos/:id", checkJwt, checkAuthz, server.update.bind(server));
+  app.delete("/todos/:id", checkJwt, checkAuthz, server.delete.bind(server));
+
   app.listen(PORT, () => {
     console.log(`⚡️[server]: Server is running at http://localhost:${PORT}`);
   });
