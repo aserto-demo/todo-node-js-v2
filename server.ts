@@ -3,12 +3,15 @@ import { Request as JWTRequest } from "express-jwt";
 import { Response } from "express";
 import { Todo } from "./interfaces";
 import { Store } from "./store";
+import { Directory } from "./directory";
 
 export class Server {
   store: Store;
+  directory: Directory;
 
   constructor(store: Store) {
     this.store = store;
+    this.directory = new Directory({});
   }
 
   async list(_: Request, res: Response) {
@@ -19,7 +22,8 @@ export class Server {
   async create(req: JWTRequest, res: Response) {
     const todo: Todo = req.body;
     todo.ID = uuidv4();
-    todo.OwnerID = req.auth.sub;
+    const user = await this.directory.getUserByUserID(req.auth.sub);
+    todo.OwnerID = user.key
 
     await this.store.insert(todo);
     res.json({ msg: "Todo created" });
