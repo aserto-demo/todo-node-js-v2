@@ -22,11 +22,16 @@ export class Server {
   async create(req: JWTRequest, res: Response) {
     const todo: Todo = req.body;
     todo.ID = uuidv4();
-    const user = await this.directory.getUserByUserID(req.auth.sub);
-    todo.OwnerID = user.key
+    try {
+      const user = await this.directory.getUserByIdentity(req.auth.sub);
+      todo.OwnerID = user.key
 
-    await this.store.insert(todo);
-    res.json({ msg: "Todo created" });
+      await this.store.insert(todo);
+      res.json({ msg: "Todo created" });
+    } catch (error) {
+      res.status(422).send({error: (error as Error).message})
+    }
+
   }
 
   async update(req: JWTRequest, res: Response) {

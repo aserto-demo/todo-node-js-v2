@@ -22,11 +22,28 @@ export class Directory {
     });
   }
 
-  async getUserByUserID(subject: string): Promise<User> {
-    const user = await this.client.object({
-      type: "user",
-      key: subject,
-    });
+  async getUserByIdentity(identity: string): Promise<User> {
+    const relation = await this.client.relation(
+      {
+        subject: {
+          type: 'user',
+          key: identity
+        },
+        object: {
+          type: 'identity',
+          key: identity
+        },
+        relation: {
+          name: 'identifier',
+          objectType: 'identity'
+        }
+      }
+    )
+    if (!relation && !relation.resultsList || relation.resultsList.length === 0) {
+      throw new Error(`No relations found for identity ${identity}`, )
+    }
+
+    const user = await this.client.object(relation.resultsList[0].subject);
     const { email, picture } = user.properties;
     return {
       id: user.id,
