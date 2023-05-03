@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@aserto/aserto-node@^0.21.3":
-  version "0.21.3"
-  resolved "https://registry.yarnpkg.com/@aserto/aserto-node/-/aserto-node-0.21.3.tgz#187182f32af6d730ddea1a2b818e37a64acbbed0"
-  integrity sha512-kJAQQVCOg+Unpbc3lko6LbXTyctPyRP441uiJ5Jx0q0pzeMhevP+eSHsJX52o9bjQ9QDVzgxmSZ6GxbttkltOw==
+"@aserto/aserto-node@^0.21.4":
+  version "0.21.4"
+  resolved "https://registry.yarnpkg.com/@aserto/aserto-node/-/aserto-node-0.21.4.tgz#4147e6b683b14aa27372fad4daec3bb13cc45e0d"
+  integrity sha512-Fp4SfG1vQXFibgYAxieFrvvBDW7uP2ksQx7fg6l5RwYQ8yWDAaWkQ8HFeQZ4AEq4tuqLKraYFRK7MhjBpKFjtw==
   dependencies:
     "@aserto/node-authorizer" "^0.20.4"
     "@aserto/node-directory" "^0.20.6"

@@ -27,7 +27,6 @@ export class Directory {
       {
         subject: {
           type: 'user',
-          key: identity
         },
         object: {
           type: 'identity',
