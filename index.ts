@@ -62,7 +62,7 @@ Store.open().then((store) => {
     const { userID } = req.params;
     const user: User = users[userID]
       ? users[userID]
-      : await directory.getUserByUserID(userID);
+      : await directory.getUserByIdentity(userID);
 
     //Fill cache
     users[userID] = user;
