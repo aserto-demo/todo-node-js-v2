@@ -12,7 +12,11 @@ export class Directory {
     const url = config.url ?? process.env.ASERTO_DIRECTORY_SERVICE_URL;
     const tenantId = config.tenantId ?? process.env.ASERTO_TENANT_ID;
     const apiKey = config.apiKey ?? process.env.ASERTO_DIRECTORY_API_KEY;
-    const rejectUnauthorized = config.rejectUnauthorized ?? !!process.env.ASERTO_DIRECTORY_REJECT_UNAUTHORIZED;
+    let rejectUnauthorized = config.rejectUnauthorized
+
+    if (rejectUnauthorized === undefined) {
+      rejectUnauthorized = process.env.ASERTO_DIRECTORY_REJECT_UNAUTHORIZED === "true"
+    }
 
     this.client = ds({
       url,
