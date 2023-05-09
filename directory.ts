@@ -12,13 +12,17 @@ export class Directory {
     const url = config.url ?? process.env.ASERTO_DIRECTORY_SERVICE_URL;
     const tenantId = config.tenantId ?? process.env.ASERTO_TENANT_ID;
     const apiKey = config.apiKey ?? process.env.ASERTO_DIRECTORY_API_KEY;
-    const caFile = config.caFile ?? process.env.ASERTO_DIRECTORY_CA_FILE;
+    let rejectUnauthorized = config.rejectUnauthorized
+
+    if (rejectUnauthorized === undefined) {
+      rejectUnauthorized = process.env.ASERTO_DIRECTORY_REJECT_UNAUTHORIZED === "true"
+    }
 
     this.client = ds({
       url,
       tenantId,
       apiKey,
-      caFile,
+      rejectUnauthorized,
     });
   }
 
@@ -38,14 +42,13 @@ export class Directory {
         }
       }
     )
-    if (!relation && !relation.resultsList || relation.resultsList.length === 0) {
+    if (!relation || relation.length === 0) {
       throw new Error(`No relations found for identity ${identity}`, )
     }
 
-    const user = await this.client.object(relation.resultsList[0].subject);
-    const { email, picture } = user.properties;
+    const user = await this.client.object(relation[0].subject);
+    const { email, picture } = user.properties.fields;
     return {
-      id: user.id,
       key: user.key,
       name: user.displayName,
       email,
