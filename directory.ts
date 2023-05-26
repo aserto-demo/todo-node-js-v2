@@ -55,4 +55,15 @@ export class Directory {
       picture,
     };
   }
+
+  async getUserByKey(key: string): Promise<User> {
+    const user = await this.client.object({key: key, type: 'user'});
+    const { email, picture } = user.properties.fields;
+    return {
+      key: user.key,
+      name: user.displayName,
+      email,
+      picture,
+    };
+  }
 }

@@ -8,6 +8,8 @@ import { Server } from "./server";
 import { UserCache, User } from "./interfaces";
 import * as dotenv from "dotenv";
 import * as dotenvExpand from "dotenv-expand";
+import { Request as JWTRequest } from "express-jwt";
+
 
 dotenvExpand.expand(dotenv.config());
 
@@ -58,11 +60,20 @@ Store.open().then((store) => {
 
   //Users cache
   const users: UserCache = {};
-  app.get("/users/:userID", checkJwt, checkAuthz, async (req, res) => {
+  app.get("/users/:userID", checkJwt, checkAuthz, async (req: JWTRequest, res) => {
     const { userID } = req.params;
-    const user: User = users[userID]
-      ? users[userID]
-      : await directory.getUserByIdentity(userID);
+    let user: User = users[userID]
+
+    if(user){
+      res.json(user);
+      return
+    }
+
+    if(req.auth.sub === userID) {
+      user =  await directory.getUserByIdentity(userID)
+    } else {
+      user =  await directory.getUserByKey(userID)
+    }
 
     //Fill cache
     users[userID] = user;
