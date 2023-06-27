@@ -47,7 +47,7 @@ export class Directory {
     }
 
     const user = await this.client.object(relation[0].subject);
-    const { email, picture } = user.properties.fields;
+    const { email, picture } = JSON.parse(user.properties.toJsonString());
     return {
       key: user.key,
       name: user.displayName,
@@ -58,7 +58,7 @@ export class Directory {
 
   async getUserByKey(key: string): Promise<User> {
     const user = await this.client.object({key: key, type: 'user'});
-    const { email, picture } = user.properties.fields;
+    const { email, picture } = JSON.parse(user.properties.toJsonString());
     return {
       key: user.key,
       name: user.displayName,

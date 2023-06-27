@@ -11,7 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@aserto/aserto-node": "^0.22.0",
+    "@aserto/aserto-node": "^0.22.8",
     "cors": "^2.8.5",
     "dotenv": "^16.0.0",
     "dotenv-expand": "^9.0.0",
