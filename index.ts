@@ -9,6 +9,8 @@ import { UserCache, User } from "./interfaces";
 import * as dotenv from "dotenv";
 import * as dotenvExpand from "dotenv-expand";
 import { Request as JWTRequest } from "express-jwt";
+import { credentials } from "@grpc/grpc-js";
+
 
 
 dotenvExpand.expand(dotenv.config());
@@ -18,7 +20,7 @@ import { getConfig } from "./config";
 
 const authzOptions = getConfig();
 
-const ssl = getSSLCredentials(authzOptions.authorizerCertCAFile);
+const ssl = authzOptions.authorizerCertCAFile ? getSSLCredentials(authzOptions.authorizerCertCAFile) : credentials.createSsl();
 
 
 const authClient = new Authorizer({
