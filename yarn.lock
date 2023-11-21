@@ -7,10 +7,10 @@
   resolved "https://registry.yarnpkg.com/@aashutoshrathi/word-wrap/-/word-wrap-1.2.6.tgz#bd9154aec9983f77b3a034ecaa015c2e4201f6cf"
   integrity sha512-1Yjs2SvM8TflER/OD3cOjhWWOZb58A2t7wpE2S9XfBYTiIl+XFhQG2bjy4Pu1I+EAlCNUzRDYDdFwFYUKvXcIA==
 
-"@aserto/aserto-node@^0.30.1":
-  version "0.30.1"
-  resolved "https://registry.yarnpkg.com/@aserto/aserto-node/-/aserto-node-0.30.1.tgz#bf05063307c0c4e1669020d97c40a686e6df2a88"
-  integrity sha512-X9ZiHCM4ecgHfOugk0z03mqWYtv+qVpBen7Abw414HdTD2YRahKECsp1Qhp4MND0JpxuXCqZofWsRYTEP46xVA==
+"@aserto/aserto-node@^0.30.2":
+  version "0.30.2"
+  resolved "https://registry.yarnpkg.com/@aserto/aserto-node/-/aserto-node-0.30.2.tgz#17c4e83e8e56e9e86ef2d05c7586d985d1e747bf"
+  integrity sha512-UqcASp9RcHOKW2Ia/RHDIANVrvS1pnqNggDg9oP015o62/bC1cVRp2xr4Qzl/KWoKZLpZZA6jd0E/tLw3tFWIQ==
   dependencies:
     "@aserto/node-authorizer" "^0.20.6"
     "@aserto/node-directory" "^0.30.0"
