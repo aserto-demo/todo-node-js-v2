@@ -1,14 +1,15 @@
 import { User } from "./interfaces";
 import {
   ds,
-  Directory as DirectoryClient,
-  ServiceConfig,
+  DirectoryV3 as DirectoryClient,
+  DirectoryV3Config,
+  DirectoryServiceV3,
 } from "@aserto/aserto-node";
 
 export class Directory {
   client: DirectoryClient;
 
-  constructor(config: ServiceConfig) {
+  constructor(config: DirectoryV3Config) {
     const url = config.url ?? process.env.ASERTO_DIRECTORY_SERVICE_URL;
     const tenantId = config.tenantId ?? process.env.ASERTO_TENANT_ID;
     const apiKey = config.apiKey ?? process.env.ASERTO_DIRECTORY_API_KEY;
@@ -18,7 +19,7 @@ export class Directory {
       rejectUnauthorized = process.env.ASERTO_DIRECTORY_REJECT_UNAUTHORIZED === "true"
     }
 
-    this.client = ds({
+    this.client = DirectoryServiceV3({
       url,
       tenantId,
       apiKey,
@@ -29,38 +30,34 @@ export class Directory {
   async getUserByIdentity(identity: string): Promise<User> {
     const relation = await this.client.relation(
       {
-        subject: {
-          type: 'user',
-        },
-        object: {
-          type: 'identity',
-          key: identity
-        },
-        relation: {
-          name: 'identifier',
-          objectType: 'identity'
-        }
+          subjectType: 'user',
+          objectType: 'identity',
+          objectId: identity,
+          relation: 'identifier',
       }
     )
-    if (!relation || relation.length === 0) {
+    if (!relation || !relation.result) {
       throw new Error(`No relations found for identity ${identity}`, )
     }
 
-    const user = await this.client.object(relation[0].subject);
+    const user = await this.client.object({
+      objectId: relation.result.subjectId,
+      objectType: relation.result.subjectType,
+    });
     const { email, picture } = JSON.parse(user.properties.toJsonString());
     return {
-      key: user.key,
+      key: user.id,
       name: user.displayName,
       email,
       picture,
     };
   }
 
-  async getUserByKey(key: string): Promise<User> {
-    const user = await this.client.object({key: key, type: 'user'});
+  async getUserById(id: string): Promise<User> {
+    const user = await this.client.object({objectId: id, objectType: 'user'});
     const { email, picture } = JSON.parse(user.properties.toJsonString());
     return {
-      key: user.key,
+      key: user.id,
       name: user.displayName,
       email,
       picture,

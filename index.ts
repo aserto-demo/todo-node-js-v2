@@ -11,12 +11,21 @@ import * as dotenvExpand from "dotenv-expand";
 import { Request as JWTRequest } from "express-jwt";
 
 
+
 dotenvExpand.expand(dotenv.config());
 
-import { jwtAuthz } from "@aserto/aserto-node";
+import { Authorizer, Middleware, getSSLCredentials } from "@aserto/aserto-node";
 import { getConfig } from "./config";
 
 const authzOptions = getConfig();
+
+const ssl = getSSLCredentials(authzOptions.authorizerCertCAFile)
+
+const authClient = new Authorizer({
+    authorizerServiceUrl: authzOptions.authorizerServiceUrl,
+    authorizerApiKey: authzOptions.authorizerApiKey,
+    tenantId: authzOptions.tenantId,
+  }, ssl)
 
 const checkJwt = jwt({
   // Dynamically provide a signing key based on the kid in the header and the signing keys provided by the JWKS endpoint
@@ -42,25 +51,29 @@ const PORT = 3001;
 Store.open().then((store) => {
   const server = new Server(store);
 
-  //Aserto authorizer middleware function
-  const checkAuthz: express.Handler = jwtAuthz(
-    authzOptions,
-    undefined,
-    async (req: express.Request) => {
+  //Aserto authorizer middleware
+  const middleware = new Middleware({
+    client: authClient,
+    policy: {
+      name: authzOptions.instanceName,
+      instanceLabel: authzOptions.instanceLabel,
+      root: authzOptions.policyRoot,
+    },
+    resourceMapper: async (req: express.Request) => {
       if (!req.params?.id) {
         return {};
       }
 
       const todo = await store.get(req.params.id);
       return { ownerID: todo.OwnerID };
-    }
-  );
+    },
+  })
 
   const directory = new Directory({});
 
   //Users cache
   const users: UserCache = {};
-  app.get("/users/:userID", checkJwt, checkAuthz, async (req: JWTRequest, res) => {
+  app.get("/users/:userID", checkJwt, middleware.Authz(), async (req: JWTRequest, res) => {
     const { userID } = req.params;
     let user: User = users[userID]
 
@@ -72,7 +85,7 @@ Store.open().then((store) => {
     if(req.auth.sub === userID) {
       user =  await directory.getUserByIdentity(userID)
     } else {
-      user =  await directory.getUserByKey(userID)
+      user =  await directory.getUserById(userID)
     }
 
     //Fill cache
@@ -80,10 +93,10 @@ Store.open().then((store) => {
     res.json(user);
   });
 
-  app.get("/todos", checkJwt, checkAuthz, server.list.bind(server));
-  app.post("/todos", checkJwt, checkAuthz, server.create.bind(server));
-  app.put("/todos/:id", checkJwt, checkAuthz, server.update.bind(server));
-  app.delete("/todos/:id", checkJwt, checkAuthz, server.delete.bind(server));
+  app.get("/todos", checkJwt, middleware.Authz(), server.list.bind(server));
+  app.post("/todos", checkJwt, middleware.Authz(), server.create.bind(server));
+  app.put("/todos/:id", checkJwt, middleware.Authz(), server.update.bind(server));
+  app.delete("/todos/:id", checkJwt, middleware.Authz(), server.delete.bind(server));
 
   app.listen(PORT, () => {
     console.log(`⚡️[server]: Server is running at http://localhost:${PORT}`);
