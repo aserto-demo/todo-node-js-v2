@@ -1,6 +1,5 @@
 import { User } from "./interfaces";
 import {
-  ds,
   DirectoryV3 as DirectoryClient,
   DirectoryV3Config,
   DirectoryServiceV3,
@@ -14,6 +13,7 @@ export class Directory {
     const tenantId = config.tenantId ?? process.env.ASERTO_TENANT_ID;
     const apiKey = config.apiKey ?? process.env.ASERTO_DIRECTORY_API_KEY;
     let rejectUnauthorized = config.rejectUnauthorized
+    const caFile = config.caFile ?? process.env.ASERTO_DIRECTORY_CERT_PATH
 
     if (rejectUnauthorized === undefined) {
       rejectUnauthorized = process.env.ASERTO_DIRECTORY_REJECT_UNAUTHORIZED === "true"
@@ -24,6 +24,7 @@ export class Directory {
       tenantId,
       apiKey,
       rejectUnauthorized,
+      caFile: caFile,
     });
   }
 
@@ -36,6 +37,7 @@ export class Directory {
           relation: 'identifier',
       }
     )
+
     if (!relation || !relation.result) {
       throw new Error(`No relations found for identity ${identity}`, )
     }
