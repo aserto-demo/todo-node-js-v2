@@ -5,7 +5,7 @@ import jwksRsa = require("jwks-rsa");
 import { Directory } from "./directory";
 import { Store } from "./store";
 import { Server } from "./server";
-import { UserCache, User } from "./interfaces";
+import { UserCache, User, Todo } from "./interfaces";
 import * as dotenv from "dotenv";
 import * as dotenvExpand from "dotenv-expand";
 import { Request as JWTRequest } from "express-jwt";
@@ -65,9 +65,12 @@ Store.open().then((store) => {
       }
 
       const todo = await store.get(req.params.id);
-      return { ownerID: todo.OwnerID };
-    },
-  })
+      return { ownerID: todo.OwnerID, id: req.params.id };
+    }
+  });
+
+  // super simple middleware - works with policy-rebac-global-appsec
+  // const checkAuthz: express.Handler = jwtAuthz(authzOptions);
 
   const directory = new Directory({});
 

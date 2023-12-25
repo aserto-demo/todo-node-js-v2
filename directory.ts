@@ -1,4 +1,4 @@
-import { User } from "./interfaces";
+import { User, Todo } from "./interfaces";
 import {
   DirectoryV3 as DirectoryClient,
   DirectoryV3Config,
@@ -29,15 +29,13 @@ export class Directory {
   }
 
   async getUserByIdentity(identity: string): Promise<User> {
-    const relation = await this.client.relation(
-      {
-          subjectType: 'user',
-          objectType: 'identity',
-          objectId: identity,
-          relation: 'identifier',
-      }
-    )
-
+    const relation = await this.client.relation({
+      subjectType: 'user',
+      objectType: 'identity',
+      objectId: identity,
+      relation: 'identifier',
+    });
+    
     if (!relation || !relation.result) {
       throw new Error(`No relations found for identity ${identity}`, )
     }
@@ -46,23 +44,60 @@ export class Directory {
       objectId: relation.result.subjectId,
       objectType: relation.result.subjectType,
     });
-    const { email, picture } = JSON.parse(user.properties.toJsonString());
+    const { email, picture, roles } = JSON.parse(user.properties.toJsonString());
     return {
-      key: user.id,
+      id: user.id,
       name: user.displayName,
       email,
       picture,
+      roles,
     };
   }
 
   async getUserById(id: string): Promise<User> {
     const user = await this.client.object({objectId: id, objectType: 'user'});
-    const { email, picture } = JSON.parse(user.properties.toJsonString());
+    const { email, picture, roles } = JSON.parse(user.properties.toJsonString());
     return {
-      key: user.id,
+      id: user.id,
       name: user.displayName,
       email,
       picture,
+      roles,
     };
+  }
+
+  async insertTodo(todo: Todo) {
+    try {
+      await this.client.setObject({
+        object: {
+          id: todo.ID,
+          type: 'resource',
+          displayName: todo.Title
+        }
+      });
+      await this.client.setRelation({
+        relation: {
+          subjectId: todo.OwnerID,
+          subjectType: 'user',
+          objectId: todo.ID,
+          objectType: 'resource',
+          relation: 'owner'
+        }
+      });
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
+  async deleteTodo(todoId: string) {
+    try {
+      await this.client.deleteObject({
+        objectId: todoId,
+        objectType: 'resource',
+        withRelations: true
+      });
+    } catch (e) {
+      console.error(e)
+    }
   }
 }

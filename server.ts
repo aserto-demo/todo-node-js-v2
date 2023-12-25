@@ -24,14 +24,14 @@ export class Server {
     todo.ID = uuidv4();
     try {
       const user = await this.directory.getUserByIdentity(req.auth.sub);
-      todo.OwnerID = user.key
+      todo.OwnerID = user.id;
 
       await this.store.insert(todo);
+      await this.directory.insertTodo(todo);
       res.json({ msg: "Todo created" });
     } catch (error) {
       res.status(422).send({error: (error as Error).message})
     }
-
   }
 
   async update(req: JWTRequest, res: Response) {
@@ -44,6 +44,8 @@ export class Server {
 
   async delete(req: JWTRequest, res: Response) {
     await this.store.delete(req.params.id);
+    const user = await this.directory.getUserByIdentity(req.auth.sub);
+    await this.directory.deleteTodo(req.params.id);
     res.json({ msg: "Todo deleted" });
   }
 }
