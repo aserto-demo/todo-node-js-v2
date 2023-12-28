@@ -44,7 +44,6 @@ export class Server {
 
   async delete(req: JWTRequest, res: Response) {
     await this.store.delete(req.params.id);
-    const user = await this.directory.getUserByIdentity(req.auth.sub);
     await this.directory.deleteTodo(req.params.id);
     res.json({ msg: "Todo deleted" });
   }
