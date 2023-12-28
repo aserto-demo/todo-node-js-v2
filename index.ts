@@ -102,17 +102,17 @@ Store.open().then((store) => {
     res.json(user);
   });
 
-  // using restMiddleware.Authz() will dispatch to a custom policy module based on REST convention
+  // restMiddleware.Authz() selects the policy module to evaluate based on the REST convention
   //   e.g. GET /todos -> todoApp.GET.todos
   app.get("/todos", checkJwt, restMiddleware.Authz(), server.list.bind(server));
   app.put("/todos/:id", checkJwt, restMiddleware.Authz(), server.update.bind(server));
   app.delete("/todos/:id", checkJwt, restMiddleware.Authz(), server.delete.bind(server));
 
-  // commenting out the REST convention middleware to demonstrate the use of the Check middleware
-  // app.post("/todos", checkJwt, middleware.Authz(), server.create.bind(server));
+  // commenting out restMiddleware.Authz() to demonstrate the use of the Check middleware below
+  // app.post("/todos", checkJwt, restMiddleware.Authz(), server.create.bind(server));
 
-  // using checkMiddleware.Check() will dispatch to the "standard" rebac.check module
-  // the Check below will check whether the user is a member of the resource-creators instance
+  // checkMiddleware.Check() evaluates the "standard" rebac.check module.
+  //   the Check below only grants access to users who are members of the resource-creators instance
   app.post("/todos",
     checkJwt,
     checkMiddleware.Check({
