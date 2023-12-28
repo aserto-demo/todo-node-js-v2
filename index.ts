@@ -51,8 +51,8 @@ const PORT = 3001;
 Store.open().then((store) => {
   const server = new Server(store);
 
-  //Aserto authorizer middleware
-  const middleware = new Middleware({
+  // Aserto authorizer middleware
+  const restMiddleware = new Middleware({
     client: authClient,
     policy: {
       name: authzOptions.instanceName,
@@ -64,19 +64,25 @@ Store.open().then((store) => {
         return {};
       }
 
-      const todo = await store.get(req.params.id);
-      return { ownerID: todo.OwnerID, id: req.params.id };
+      return { object_id: req.params.id };
     }
   });
 
-  // super simple middleware - works with policy-rebac-global-appsec
-  // const checkAuthz: express.Handler = jwtAuthz(authzOptions);
+  // Aserto check middleware
+  const checkMiddleware = new Middleware({
+    client: authClient,
+    policy: {
+      name: authzOptions.instanceName,
+      instanceLabel: authzOptions.instanceLabel,
+      root: 'rebac',
+    }
+  })
 
   const directory = new Directory({});
 
-  //Users cache
+  // Users cache
   const users: UserCache = {};
-  app.get("/users/:userID", checkJwt, middleware.Authz(), async (req: JWTRequest, res) => {
+  app.get("/users/:userID", checkJwt, restMiddleware.Authz(), async (req: JWTRequest, res) => {
     const { userID } = req.params;
     let user: User = users[userID]
 
@@ -91,15 +97,30 @@ Store.open().then((store) => {
       user =  await directory.getUserById(userID)
     }
 
-    //Fill cache
+    // Fill cache
     users[userID] = user;
     res.json(user);
   });
 
-  app.get("/todos", checkJwt, middleware.Authz(), server.list.bind(server));
-  app.post("/todos", checkJwt, middleware.Authz(), server.create.bind(server));
-  app.put("/todos/:id", checkJwt, middleware.Authz(), server.update.bind(server));
-  app.delete("/todos/:id", checkJwt, middleware.Authz(), server.delete.bind(server));
+  // using restMiddleware.Authz() will dispatch to a custom policy module based on REST convention
+  //   e.g. GET /todos -> todoApp.GET.todos
+  app.get("/todos", checkJwt, restMiddleware.Authz(), server.list.bind(server));
+  app.put("/todos/:id", checkJwt, restMiddleware.Authz(), server.update.bind(server));
+  app.delete("/todos/:id", checkJwt, restMiddleware.Authz(), server.delete.bind(server));
+
+  // commenting out the REST convention middleware to demonstrate the use of the Check middleware
+  // app.post("/todos", checkJwt, middleware.Authz(), server.create.bind(server));
+
+  // using checkMiddleware.Check() will dispatch to the "standard" rebac.check module
+  // the Check below will check whether the user is a member of the resource-creators instance
+  app.post("/todos",
+    checkJwt,
+    checkMiddleware.Check({
+      objectType: 'resource-creator',
+      objectId: 'resource-creators',
+      relation: 'member'
+    }),
+    server.create.bind(server));
 
   app.listen(PORT, () => {
     console.log(`⚡️[server]: Server is running at http://localhost:${PORT}`);
