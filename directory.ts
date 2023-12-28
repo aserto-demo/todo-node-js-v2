@@ -44,25 +44,23 @@ export class Directory {
       objectId: relation.result.subjectId,
       objectType: relation.result.subjectType,
     });
-    const { email, picture, roles } = JSON.parse(user.properties.toJsonString());
+    const { email, picture } = JSON.parse(user.properties.toJsonString());
     return {
       id: user.id,
       name: user.displayName,
       email,
       picture,
-      roles,
     };
   }
 
   async getUserById(id: string): Promise<User> {
     const user = await this.client.object({objectId: id, objectType: 'user'});
-    const { email, picture, roles } = JSON.parse(user.properties.toJsonString());
+    const { email, picture } = JSON.parse(user.properties.toJsonString());
     return {
       id: user.id,
       name: user.displayName,
       email,
       picture,
-      roles,
     };
   }
 

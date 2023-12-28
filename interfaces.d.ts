@@ -10,7 +10,6 @@ export interface User {
   email: string;
   picture: string;
   name: string;
-  roles: [string]
 }
 export interface UserCache {
   [key: string]: User;
