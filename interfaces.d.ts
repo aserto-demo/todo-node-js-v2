@@ -6,7 +6,7 @@ export interface Todo {
 }
 
 export interface User {
-  key: string;
+  id: string;
   email: string;
   picture: string;
   name: string;
