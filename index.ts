@@ -14,7 +14,7 @@ import { Request as JWTRequest } from "express-jwt";
 
 dotenvExpand.expand(dotenv.config());
 
-import { Authorizer, Middleware, getSSLCredentials } from "@aserto/aserto-node";
+import { Authorizer, Middleware, SubIdentityMapper, getSSLCredentials } from "@aserto/aserto-node";
 import { getConfig } from "./config";
 
 const authzOptions = getConfig();
@@ -65,7 +65,8 @@ Store.open().then((store) => {
       }
 
       return { object_id: req.params.id };
-    }
+    },
+    identityMapper: SubIdentityMapper()
   });
 
   // Aserto check middleware
@@ -75,7 +76,8 @@ Store.open().then((store) => {
       name: authzOptions.instanceName,
       instanceLabel: authzOptions.instanceLabel,
       root: 'rebac',
-    }
+    },
+    identityMapper: SubIdentityMapper()
   })
 
   const directory = new Directory({});
