@@ -14,18 +14,17 @@ import { Request as JWTRequest } from "express-jwt";
 
 dotenvExpand.expand(dotenv.config());
 
-import { Authorizer, Middleware, SubIdentityMapper, getSSLCredentials } from "@aserto/aserto-node";
+import { Authorizer, Middleware, SubIdentityMapper } from "@aserto/aserto-node";
 import { getConfig } from "./config";
 
 const authzOptions = getConfig();
-
-const ssl = getSSLCredentials(authzOptions.authorizerCertCAFile)
 
 const authClient = new Authorizer({
     authorizerServiceUrl: authzOptions.authorizerServiceUrl,
     authorizerApiKey: authzOptions.authorizerApiKey,
     tenantId: authzOptions.tenantId,
-  }, ssl)
+    authorizerCertFile: authzOptions.authorizerCertCAFile
+  })
 
 const checkJwt = jwt({
   // Dynamically provide a signing key based on the kid in the header and the signing keys provided by the JWKS endpoint
