@@ -9,7 +9,7 @@ yarn
 ```
 
 ### Set up the `.env` file
-Rename the `.env.example` file to `.env` and update the `ASERTO_AUTHORIZER_CERT_PATH` path to correspond to the path in which Topaz generated your certificates (by default this path will be `~/.config/topaz/certs/grpc-ca.crt`).
+Rename the `.env.example` file to `.env` and update the `ASERTO_AUTHORIZER_CERT_PATH` and `ASERTO_DIRECTORY_CERT_PATH` environment variables to correspond to the path in which Topaz generated your certificates (by default this path will be `$HOME/.local/share/topaz/certs/grpc-ca.crt` for Mac/Linux, and `$HOMEPATH\AppData\Local\topaz\certs\grpc-ca.crt` for Windows). You can find out using the command `topaz config info config.topaz_certs_dir`.
 `ASERTO_DIRECTORY_REJECT_UNAUTHORIZED=false` will let you connect to a local directory without passing the certificate.
 
 ```
@@ -26,7 +26,8 @@ ASERTO_POLICY_ROOT=todoApp
 # at the bottom of this file.
 ASERTO_AUTHORIZER_SERVICE_URL=localhost:8282
 ASERTO_DIRECTORY_SERVICE_URL=localhost:9292
-ASERTO_AUTHORIZER_CERT_PATH=${HOME}/.config/topaz/certs/grpc-ca.crt
+ASERTO_AUTHORIZER_CERT_PATH=${HOME}/.local/share/topaz/certs/grpc-ca.crt
+ASERTO_DIRECTORY_CERT_PATH=${HOME}/.local/share/topaz/certs/grpc-ca.crt
 ASERTO_DIRECTORY_REJECT_UNAUTHORIZED=false
 
 # Aserto hosted authorizer
