@@ -23,7 +23,7 @@ const authClient = new Authorizer({
     authorizerServiceUrl: authzOptions.authorizerServiceUrl,
     authorizerApiKey: authzOptions.authorizerApiKey,
     tenantId: authzOptions.tenantId,
-    authorizerCertFile: authzOptions.authorizerCertCAFile
+    caFile: authzOptions.authorizerCertCAFile
   })
 
 const checkJwt = jwt({
