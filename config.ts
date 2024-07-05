@@ -8,7 +8,8 @@ const getConfig: () => AuthzOptions = () => {
     ASERTO_TENANT_ID,
     ASERTO_POLICY_INSTANCE_NAME,
     ASERTO_POLICY_INSTANCE_LABEL,
-    ASERTO_AUTHORIZER_CERT_PATH,
+    ASERTO_AUTHORIZER_GRPC_CA_CERT_PATH,
+    ASERTO_GRPC_CA_CERT_PATH,
   } = process.env;
 
   if (!ASERTO_AUTHORIZER_SERVICE_URL) {
@@ -17,6 +18,9 @@ const getConfig: () => AuthzOptions = () => {
   if (!ASERTO_POLICY_ROOT) {
     throw new Error("ASERTO_POLICY_ROOT is not defined");
   }
+
+  const caCertPath =
+    ASERTO_AUTHORIZER_GRPC_CA_CERT_PATH || ASERTO_GRPC_CA_CERT_PATH;
 
   const authzOptions = {
     authorizerServiceUrl: ASERTO_AUTHORIZER_SERVICE_URL,
@@ -33,8 +37,8 @@ const getConfig: () => AuthzOptions = () => {
     ...(ASERTO_POLICY_INSTANCE_LABEL && {
       instanceLabel: ASERTO_POLICY_INSTANCE_LABEL,
     }),
-    ...(ASERTO_AUTHORIZER_CERT_PATH && {
-      authorizerCertCAFile: ASERTO_AUTHORIZER_CERT_PATH,
+    ...(caCertPath && {
+      authorizerCertCAFile: caCertPath,
     }),
   };
   return authzOptions;

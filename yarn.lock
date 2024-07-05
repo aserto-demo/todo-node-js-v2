@@ -7,7 +7,7 @@
   resolved "https://registry.yarnpkg.com/@aashutoshrathi/word-wrap/-/word-wrap-1.2.6.tgz#bd9154aec9983f77b3a034ecaa015c2e4201f6cf"
   integrity sha512-1Yjs2SvM8TflER/OD3cOjhWWOZb58A2t7wpE2S9XfBYTiIl+XFhQG2bjy4Pu1I+EAlCNUzRDYDdFwFYUKvXcIA==
 
-"@aserto/aserto-node@^0.32.0":
+"@aserto/aserto-node@^0.32.7":
   version "0.32.7"
   resolved "https://registry.yarnpkg.com/@aserto/aserto-node/-/aserto-node-0.32.7.tgz#a0e0c6e62a6eb509a7c465a8c02e93dd785e1071"
   integrity sha512-iWw1yuwp3MCBrt0zplN7pCR9mRYHezkIweER+76NyXHKiDJ+8i3lOCdqr3B63fjRdUd+vWzaN4YiY5uCaPLp2Q==
