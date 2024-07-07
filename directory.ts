@@ -12,11 +12,15 @@ export class Directory {
     const url = config.url ?? process.env.ASERTO_DIRECTORY_SERVICE_URL;
     const tenantId = config.tenantId ?? process.env.ASERTO_TENANT_ID;
     const apiKey = config.apiKey ?? process.env.ASERTO_DIRECTORY_API_KEY;
-    let rejectUnauthorized = config.rejectUnauthorized
-    const caFile = config.caFile ?? process.env.ASERTO_DIRECTORY_CERT_PATH
+    let rejectUnauthorized = config.rejectUnauthorized;
+    const caFile =
+      config.caFile ??
+      (process.env.ASERTO_DIRECTORY_CERT_PATH ||
+        process.env.ASERTO_GRPC_CA_CERT_PATH);
 
     if (rejectUnauthorized === undefined) {
-      rejectUnauthorized = process.env.ASERTO_DIRECTORY_REJECT_UNAUTHORIZED === "true"
+      rejectUnauthorized =
+        process.env.ASERTO_DIRECTORY_REJECT_UNAUTHORIZED === "true";
     }
 
     this.client = DirectoryServiceV3({
@@ -30,14 +34,14 @@ export class Directory {
 
   async getUserByIdentity(identity: string): Promise<User> {
     const relation = await this.client.relation({
-      subjectType: 'user',
-      objectType: 'identity',
+      subjectType: "user",
+      objectType: "identity",
       objectId: identity,
-      relation: 'identifier',
+      relation: "identifier",
     });
-    
+
     if (!relation || !relation.result) {
-      throw new Error(`No relations found for identity ${identity}`, )
+      throw new Error(`No relations found for identity ${identity}`);
     }
 
     const user = await this.client.object({
@@ -54,7 +58,7 @@ export class Directory {
   }
 
   async getUserById(id: string): Promise<User> {
-    const user = await this.client.object({objectId: id, objectType: 'user'});
+    const user = await this.client.object({ objectId: id, objectType: "user" });
     const { email, picture } = JSON.parse(user.properties.toJsonString());
     return {
       id: user.id,
@@ -69,21 +73,21 @@ export class Directory {
       await this.client.setObject({
         object: {
           id: todo.ID,
-          type: 'resource',
-          displayName: todo.Title
-        }
+          type: "resource",
+          displayName: todo.Title,
+        },
       });
       await this.client.setRelation({
         relation: {
           subjectId: todo.OwnerID,
-          subjectType: 'user',
+          subjectType: "user",
           objectId: todo.ID,
-          objectType: 'resource',
-          relation: 'owner'
-        }
+          objectType: "resource",
+          relation: "owner",
+        },
       });
     } catch (e) {
-      console.error(e)
+      console.error(e);
     }
   }
 
@@ -91,11 +95,11 @@ export class Directory {
     try {
       await this.client.deleteObject({
         objectId: todoId,
-        objectType: 'resource',
-        withRelations: true
+        objectType: "resource",
+        withRelations: true,
       });
     } catch (e) {
-      console.error(e)
+      console.error(e);
     }
   }
 }
