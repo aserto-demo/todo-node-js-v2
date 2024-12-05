@@ -1,8 +1,12 @@
+import { create } from "@bufbuild/protobuf";
 import { User, Todo } from "./interfaces";
 import {
   DirectoryV3 as DirectoryClient,
   DirectoryV3Config,
   DirectoryServiceV3,
+  AccountPropertiesSchema,
+  TenantPropertiesSchema,
+  UserPropertiesSchema,
 } from "@aserto/aserto-node";
 
 export class Directory {
@@ -44,27 +48,27 @@ export class Directory {
       throw new Error(`No relations found for identity ${identity}`);
     }
 
-    const user = await this.client.object({
+    const user = (await this.client.object({
       objectId: relation.result.subjectId,
       objectType: relation.result.subjectType,
-    });
-    const { email, picture } = JSON.parse(user.properties.toJsonString());
+    })).result;
+    const { email, picture } = create(UserPropertiesSchema,  user.properties)
     return {
       id: user.id,
       name: user.displayName,
-      email,
-      picture,
+      email: email,
+      picture: picture,
     };
   }
 
   async getUserById(id: string): Promise<User> {
-    const user = await this.client.object({ objectId: id, objectType: "user" });
-    const { email, picture } = JSON.parse(user.properties.toJsonString());
+    const user = (await this.client.object({ objectId: id, objectType: "user" })).result;
+    const { email, picture } = create(UserPropertiesSchema,  user.properties)
     return {
       id: user.id,
       name: user.displayName,
-      email,
-      picture,
+      email: email,
+      picture: picture,
     };
   }
 

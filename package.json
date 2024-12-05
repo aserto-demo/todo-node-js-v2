@@ -4,14 +4,14 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon --ignore db/* index.ts",
+    "start": "nodemon index.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@aserto/aserto-node": "^0.32.7",
+    "@aserto/aserto-node": "^0.33.0",
     "cors": "^2.8.5",
     "dotenv": "^16.0.0",
     "dotenv-expand": "^9.0.0",
@@ -32,7 +32,7 @@
     "eslint": "^8.12.0",
     "nodemon": "^3.0.1",
     "ts-node": "^10.7.0",
-    "typescript": "^4.6.2"
+    "typescript": "^4.9.5"
   },
   "packageManager": "yarn@1.22.19"
 }
