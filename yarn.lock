@@ -2,17 +2,17 @@
 # yarn lockfile v1
 
 
-"@aserto/aserto-node@^0.33.0":
-  version "0.33.0"
-  resolved "https://registry.yarnpkg.com/@aserto/aserto-node/-/aserto-node-0.33.0.tgz#d87cca9f02347aec6f98e235e3eb31f4b0903a16"
-  integrity sha512-+TMqNb5RwEjMS2hCaLrNI/kZcth8XpgE+gZm2aUNboUpeSbfXkODX9n8F1RDH+atVnZJdvcGbYrCSLTQDS5nqw==
+"@aserto/aserto-node@^0.33.2":
+  version "0.33.2"
+  resolved "https://registry.yarnpkg.com/@aserto/aserto-node/-/aserto-node-0.33.2.tgz#e2411c0781d3c2505d7716c7a73f5cbb5be08f05"
+  integrity sha512-e7iGzT6dowleXmXJ05LqOV+Jw5dAxsMUWjhDSmvc9ar2+SWtDq6eqaHipkQX5KcLYDDrM6dQrzQgGA6XW1BDdg==
   dependencies:
     "@aserto/node-authorizer" "^0.21.0"
     "@aserto/node-directory" "^0.32.0"
     "@bufbuild/protobuf" "^2.2.2"
     "@connectrpc/connect" "^2.0.0"
     "@connectrpc/connect-node" "^2.0.0"
-    express "^4.21.1"
+    express "^4.21.2"
     jwt-decode "^4.0.0"
 
 "@aserto/node-authorizer@^0.21.0":
@@ -1040,7 +1040,7 @@ express-unless@^2.1.3:
   resolved "https://registry.yarnpkg.com/express-unless/-/express-unless-2.1.3.tgz#f951c6cca52a24da3de32d42cfd4db57bc0f9a2e"
   integrity sha512-wj4tLMyCVYuIIKHGt0FhCtIViBcwzWejX0EjNxveAa6dG+0XBCQhMbx+PnkLkFCxLC69qoFrxds4pIyL88inaQ==
 
-express@^4.21.1, express@^4.21.2:
+express@^4.21.2:
   version "4.21.2"
   resolved "https://registry.yarnpkg.com/express/-/express-4.21.2.tgz#cf250e48362174ead6cea4a566abef0162c1ec32"
   integrity sha512-28HqgMZAmih1Czt9ny7qr6ek2qddF4FclbMzwhCREB6OFfH+rXAnuNCwo1/wFvrtbgsQDb4kSbX9de9lFbrXnA==
