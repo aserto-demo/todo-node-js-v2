@@ -1,12 +1,10 @@
-import { create } from "@bufbuild/protobuf";
 import { User, Todo } from "./interfaces";
 import {
   DirectoryV3 as DirectoryClient,
   DirectoryV3Config,
   DirectoryServiceV3,
-  AccountPropertiesSchema,
-  TenantPropertiesSchema,
   UserPropertiesSchema,
+  fromJson,
 } from "@aserto/aserto-node";
 
 export class Directory {
@@ -38,9 +36,9 @@ export class Directory {
 
   async getUserByIdentity(identity: string): Promise<User> {
     const relation = await this.client.relation({
-      subjectType: "user",
-      objectType: "identity",
-      objectId: identity,
+      objectType: "user",
+      subjectType: "identity",
+      subjectId: identity,
       relation: "identifier",
     });
 
@@ -52,7 +50,9 @@ export class Directory {
       objectId: relation.result.subjectId,
       objectType: relation.result.subjectType,
     })).result;
-    const { email, picture } = create(UserPropertiesSchema,  user.properties)
+    const { email, picture } = fromJson(UserPropertiesSchema,  user.properties, {
+      ignoreUnknownFields: true
+    })
     return {
       id: user.id,
       name: user.displayName,
@@ -63,7 +63,9 @@ export class Directory {
 
   async getUserById(id: string): Promise<User> {
     const user = (await this.client.object({ objectId: id, objectType: "user" })).result;
-    const { email, picture } = create(UserPropertiesSchema,  user.properties)
+    const { email, picture } = fromJson(UserPropertiesSchema,  user.properties, {
+      ignoreUnknownFields: true
+    })
     return {
       id: user.id,
       name: user.displayName,
