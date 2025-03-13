@@ -5,6 +5,8 @@ import {
   DirectoryServiceV3,
   UserPropertiesSchema,
   fromJson,
+  GetRelationResponse,
+  NotFoundError,
 } from "@aserto/aserto-node";
 
 export class Directory {
@@ -34,13 +36,49 @@ export class Directory {
     });
   }
 
+  /**
+   * Retrieves a user by their identity.
+   *
+   * This method fetches the user details based on the provided identity. It handles different scenarios
+   * based on the `LEGACY_IDENTITIES` environment variable. If `LEGACY_IDENTITIES` is set to 'false',
+   * it fetches the relation with the user as the object and identity as the subject. If set to 'true',
+   * it fetches the relation with the identity as the object and user as the subject. If the environment
+   * variable is not set, it tries to fetch the relation with the identity as the object and user as the
+   * subject, and if not found, it fetches the relation with the user as the object and identity as the subject.
+   *
+   * @param identity - The identity string to search for.
+   * @returns A promise that resolves to a User object containing the user's details.
+   * @throws Will throw an error if no relations are found for the provided identity or if any other error occurs.
+   */
   async getUserByIdentity(identity: string): Promise<User> {
-    const relation = await this.client.relation({
-      objectType: "user",
-      subjectType: "identity",
-      subjectId: identity,
-      relation: "identifier",
-    });
+    const legacyIdentities = process.env.LEGACY_IDENTITIES;
+    let relation: GetRelationResponse;
+
+    const getRelation = async ({ objectType, subjectType, id }: { objectType: string, subjectType: string, id: string }) => {
+      return await this.client.relation({
+        objectType,
+        subjectType,
+        [objectType === "identity" ? "objectId" : "subjectId"]: id,
+        relation: 'identifier',
+      });
+    };
+
+
+    if (legacyIdentities === 'false') {
+      relation = await getRelation({ objectType: "user", subjectType: "identity", id: identity });
+    } else if (legacyIdentities === 'true') {
+      relation = await getRelation({ objectType: "identity", subjectType: "user", id: identity });
+    } else {
+      try {
+        relation = await getRelation({ objectType: "identity", subjectType: "user", id: identity });
+      } catch (error) {
+        if (error instanceof NotFoundError) {
+          relation = await getRelation({ objectType: "user", subjectType: "identity", id: identity });
+        } else {
+          throw error;
+        }
+      }
+    }
 
     if (!relation || !relation.result) {
       throw new Error(`No relations found for identity ${identity}`);
@@ -50,7 +88,7 @@ export class Directory {
       objectId: relation.result.subjectId,
       objectType: relation.result.subjectType,
     })).result;
-    const { email, picture } = fromJson(UserPropertiesSchema,  user.properties, {
+    const { email, picture } = fromJson(UserPropertiesSchema, user.properties, {
       ignoreUnknownFields: true
     })
     return {
@@ -63,7 +101,7 @@ export class Directory {
 
   async getUserById(id: string): Promise<User> {
     const user = (await this.client.object({ objectId: id, objectType: "user" })).result;
-    const { email, picture } = fromJson(UserPropertiesSchema,  user.properties, {
+    const { email, picture } = fromJson(UserPropertiesSchema, user.properties, {
       ignoreUnknownFields: true
     })
     return {
