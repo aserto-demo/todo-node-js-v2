@@ -37,7 +37,6 @@ export class Directory {
   }
 
   async isLegacy(): Promise<boolean> {
-    console.log("isLegacy")
     try {
       await this.client.relation({
         objectType: "identity",
@@ -62,7 +61,6 @@ export class Directory {
   }
 
   async getUserByLegacyIdentity(identity: string): Promise<User> {
-   console.log( "legacy ID")
     try {
       const relation = await this.client.relation({
         subjectType: "user",
@@ -98,7 +96,6 @@ export class Directory {
   }
 
   async getUserByIdentity(identity: string): Promise<User> {
-    console.log( "ID")
     try {
       const relation = await this.client.relation({
         objectType: "user",
