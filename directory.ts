@@ -1,4 +1,3 @@
-import { Dir } from "fs";
 import { User, Todo } from "./interfaces";
 import {
   DirectoryV3 as DirectoryClient,

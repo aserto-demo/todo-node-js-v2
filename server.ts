@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
 import { Request as JWTRequest } from "express-jwt";
 import { Response } from "express";
-import { Todo, User } from "./interfaces";
+import { Todo } from "./interfaces";
 import { Store } from "./store";
 import { Directory } from "./directory";
 
