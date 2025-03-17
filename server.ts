@@ -1,17 +1,19 @@
 import { v4 as uuidv4 } from "uuid";
 import { Request as JWTRequest } from "express-jwt";
 import { Response } from "express";
-import { Todo } from "./interfaces";
+import { Todo, User } from "./interfaces";
 import { Store } from "./store";
 import { Directory } from "./directory";
 
 export class Server {
   store: Store;
   directory: Directory;
+  isLegacy: Promise<boolean>
 
   constructor(store: Store) {
     this.store = store;
     this.directory = new Directory({});
+    this.isLegacy = this.directory.isLegacy()
   }
 
   async list(_: Request, res: Response) {
@@ -20,17 +22,23 @@ export class Server {
   }
 
   async create(req: JWTRequest, res: Response) {
+    let user: User
     const todo: Todo = req.body;
     todo.ID = uuidv4();
     try {
-      const user = await this.directory.getUserByIdentity(req.auth.sub);
+      if (await this.isLegacy) {
+        user = await this.directory.getUserByLegacyIdentity(req.auth.sub);
+      } else {
+        user = await this.directory.getUserByIdentity(req.auth.sub);
+      }
+
       todo.OwnerID = user.id;
 
       await this.store.insert(todo);
       await this.directory.insertTodo(todo);
       res.json({ msg: "Todo created" });
     } catch (error) {
-      res.status(422).send({error: (error as Error).message})
+      res.status(422).send({ error: (error as Error).message })
     }
   }
 

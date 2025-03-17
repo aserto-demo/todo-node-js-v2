@@ -1,12 +1,12 @@
-import { create } from "@bufbuild/protobuf";
 import { User, Todo } from "./interfaces";
 import {
   DirectoryV3 as DirectoryClient,
   DirectoryV3Config,
   DirectoryServiceV3,
-  AccountPropertiesSchema,
-  TenantPropertiesSchema,
   UserPropertiesSchema,
+  fromJson,
+  InvalidArgumentError,
+  NotFoundError,
 } from "@aserto/aserto-node";
 
 export class Directory {
@@ -36,34 +36,110 @@ export class Directory {
     });
   }
 
-  async getUserByIdentity(identity: string): Promise<User> {
-    const relation = await this.client.relation({
-      subjectType: "user",
-      objectType: "identity",
-      objectId: identity,
-      relation: "identifier",
-    });
+  async isLegacy(): Promise<boolean> {
+    console.log("isLegacy")
+    try {
+      await this.client.relation({
+        objectType: "identity",
+        objectId: "todoDemoIdentity",
+        relation: "identifier",
+        subjectType: "user",
+        subjectId: "todoDemoUser"
+      });
+      return true;
+    } catch (e) {
+      if (e instanceof InvalidArgumentError) {
+        // There is no identity#identifier relation. We're using new style identities.
+        return false;
+      }
+      if (e instanceof NotFoundError) {
+        // The relation doesn't exist but the types are valid. The model uses legacy
+        // identities.
+        return true;
+      }
+      throw e;
+    }
+  }
 
-    if (!relation || !relation.result) {
-      throw new Error(`No relations found for identity ${identity}`);
+  async getUserByLegacyIdentity(identity: string): Promise<User> {
+   console.log( "legacy ID")
+    try {
+      const relation = await this.client.relation({
+        subjectType: "user",
+        objectType: "identity",
+        objectId: identity,
+        relation: "identifier",
+        withObjects: true,
+      });
+
+      const userID = relation.result.subjectId
+      const user = relation.objects[`user:${userID}`]
+
+      const { email, picture } = fromJson(
+        UserPropertiesSchema,
+        user.properties,
+        { ignoreUnknownFields: true }
+      )
+
+      return {
+        id: user.id,
+        name: user.displayName,
+        email: email,
+        picture: picture,
+      };
+    } catch (e) {
+      if (e instanceof NotFoundError) {
+        console.error(e);
+        return
+      }
+      throw e
     }
 
-    const user = (await this.client.object({
-      objectId: relation.result.subjectId,
-      objectType: relation.result.subjectType,
-    })).result;
-    const { email, picture } = create(UserPropertiesSchema,  user.properties)
-    return {
-      id: user.id,
-      name: user.displayName,
-      email: email,
-      picture: picture,
-    };
+  }
+
+  async getUserByIdentity(identity: string): Promise<User> {
+    console.log( "ID")
+    try {
+      const relation = await this.client.relation({
+        objectType: "user",
+        subjectType: "identity",
+        subjectId: identity,
+        relation: "identifier",
+        withObjects: true,
+      });
+
+      const userID = relation.result.objectId
+      const user = relation.objects[`user:${userID}`]
+
+      const { email, picture } = fromJson(
+        UserPropertiesSchema,
+        user.properties,
+        { ignoreUnknownFields: true }
+      )
+
+      return {
+        id: user.id,
+        name: user.displayName,
+        email: email,
+        picture: picture,
+      };
+    } catch (e) {
+      if (e instanceof NotFoundError) {
+        console.error(e);
+        return
+      }
+    }
+
   }
 
   async getUserById(id: string): Promise<User> {
     const user = (await this.client.object({ objectId: id, objectType: "user" })).result;
-    const { email, picture } = create(UserPropertiesSchema,  user.properties)
+    const { email, picture } = fromJson(
+      UserPropertiesSchema,
+      user.properties,
+      { ignoreUnknownFields: true }
+    )
+
     return {
       id: user.id,
       name: user.displayName,

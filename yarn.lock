@@ -2,16 +2,16 @@
 # yarn lockfile v1
 
 
-"@aserto/aserto-node@^0.33.2":
-  version "0.33.2"
-  resolved "https://registry.yarnpkg.com/@aserto/aserto-node/-/aserto-node-0.33.2.tgz#e2411c0781d3c2505d7716c7a73f5cbb5be08f05"
-  integrity sha512-e7iGzT6dowleXmXJ05LqOV+Jw5dAxsMUWjhDSmvc9ar2+SWtDq6eqaHipkQX5KcLYDDrM6dQrzQgGA6XW1BDdg==
+"@aserto/aserto-node@^0.33.5":
+  version "0.33.5"
+  resolved "https://registry.yarnpkg.com/@aserto/aserto-node/-/aserto-node-0.33.5.tgz#dd01dc4ffe221eed0ee6451d4b494f14ff8d1d83"
+  integrity sha512-5jw/wGl+CxmFdyhunlZghaI7Ftxg+rxTCj5a27YObelySeuC7xHHoBlU0y1WIKv2bvJXiBcYpS5H8iSUtR5hCw==
   dependencies:
     "@aserto/node-authorizer" "^0.21.0"
-    "@aserto/node-directory" "^0.32.0"
-    "@bufbuild/protobuf" "^2.2.2"
-    "@connectrpc/connect" "^2.0.0"
-    "@connectrpc/connect-node" "^2.0.0"
+    "@aserto/node-directory" "^0.33.1"
+    "@bufbuild/protobuf" "^2.2.3"
+    "@connectrpc/connect" "^2.0.2"
+    "@connectrpc/connect-node" "^2.0.2"
     express "^4.21.2"
     jwt-decode "^4.0.0"
 
@@ -22,27 +22,27 @@
   dependencies:
     "@bufbuild/protobuf" "^2.2.2"
 
-"@aserto/node-directory@^0.32.0":
-  version "0.32.0"
-  resolved "https://registry.yarnpkg.com/@aserto/node-directory/-/node-directory-0.32.0.tgz#24274b33379812fb72e6fff728fc7797f2a0ae2c"
-  integrity sha512-UL63F44bZ9ryJMspzAQxoRlpS90AluhkOUZ4bN9e550h5EQN26cTikRQdQQeq+RJgU0R2l2asdvvA0rGvdswdw==
+"@aserto/node-directory@^0.33.1":
+  version "0.33.1"
+  resolved "https://registry.yarnpkg.com/@aserto/node-directory/-/node-directory-0.33.1.tgz#afd545e82cb9a9063980904af01c183db9826154"
+  integrity sha512-slQe6vVoMB7KWFJySFrS5koPFPuIkDq/lFGCS56jD6yQnFACZNJKxH1SERypa3jItmsddEGwIBvbwMr6NoyBGw==
   dependencies:
-    "@bufbuild/protobuf" "^2.2.2"
+    "@bufbuild/protobuf" "^2.2.3"
 
-"@bufbuild/protobuf@^2.2.2":
+"@bufbuild/protobuf@^2.2.2", "@bufbuild/protobuf@^2.2.3":
   version "2.2.3"
   resolved "https://registry.yarnpkg.com/@bufbuild/protobuf/-/protobuf-2.2.3.tgz#9cd136f6b687e63e9b517b3a54211ece942897ee"
   integrity sha512-tFQoXHJdkEOSwj5tRIZSPNUuXK3RaR7T1nUrPgbYX1pUbvqqaaZAsfo+NXBPsz5rZMSKVFrgK1WL8Q/MSLvprg==
 
-"@connectrpc/connect-node@^2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@connectrpc/connect-node/-/connect-node-2.0.0.tgz#1ea4eff7f2633fbe3d80378e1420bd213d9d83a4"
-  integrity sha512-DoI5T+SUvlS/8QBsxt2iDoUg15dSxqhckegrgZpWOtADtmGohBIVbx1UjtWmjLBrP4RdD0FeBw+XyRUSbpKnJQ==
+"@connectrpc/connect-node@^2.0.2":
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/@connectrpc/connect-node/-/connect-node-2.0.2.tgz#2c6306d434ca441eeef7d043b5fde8b55a098d55"
+  integrity sha512-33Ut3SRkb6SugpwVCtXXRvUrOdtiyG6z6d5+eijBOLOI75sw1tDCwcs0o/9WL3rUj1M08dLUrPmJB47fjpv6EA==
 
-"@connectrpc/connect@^2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@connectrpc/connect/-/connect-2.0.0.tgz#0a34d934bdce5fd3723f79b70aa843d4c1213df8"
-  integrity sha512-Usm8jgaaULANJU8vVnhWssSA6nrZ4DJEAbkNtXSoZay2YD5fDyMukCxu8NEhCvFzfHvrhxhcjttvgpyhOM7xAQ==
+"@connectrpc/connect@^2.0.2":
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/@connectrpc/connect/-/connect-2.0.2.tgz#acd05e1408737c860e732137dc6f960321d2c628"
+  integrity sha512-xZuylIUNvNlH52e/4eQsZvY4QZyDJRtEFEDnn/yBrv5Xi5ZZI/p8X+GAHH35ucVaBvv9u7OzHZo8+tEh1EFTxA==
 
 "@cspotcode/source-map-support@^0.8.0":
   version "0.8.1"
