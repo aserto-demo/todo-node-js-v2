@@ -1,3 +1,4 @@
+import { Dir } from "fs";
 import { User, Todo } from "./interfaces";
 import {
   DirectoryV3 as DirectoryClient,
@@ -11,6 +12,7 @@ import {
 
 export class Directory {
   client: DirectoryClient;
+  isLegacy: Promise<boolean>;
 
   constructor(config: DirectoryV3Config) {
     const url = config.url ?? process.env.ASERTO_DIRECTORY_SERVICE_URL;
@@ -34,33 +36,12 @@ export class Directory {
       rejectUnauthorized,
       caFile: caFile,
     });
+
+    this.isLegacy = isLegacy(this.client)
   }
 
-  async isLegacy(): Promise<boolean> {
-    try {
-      await this.client.relation({
-        objectType: "identity",
-        objectId: "todoDemoIdentity",
-        relation: "identifier",
-        subjectType: "user",
-        subjectId: "todoDemoUser"
-      });
-      return true;
-    } catch (e) {
-      if (e instanceof InvalidArgumentError) {
-        // There is no identity#identifier relation. We're using new style identities.
-        return false;
-      }
-      if (e instanceof NotFoundError) {
-        // The relation doesn't exist but the types are valid. The model uses legacy
-        // identities.
-        return true;
-      }
-      throw e;
-    }
-  }
 
-  async getUserByLegacyIdentity(identity: string): Promise<User> {
+  private async getUserByLegacyIdentity(identity: string): Promise<User> {
     try {
       const relation = await this.client.relation({
         subjectType: "user",
@@ -96,6 +77,10 @@ export class Directory {
   }
 
   async getUserByIdentity(identity: string): Promise<User> {
+    if (await this.isLegacy) {
+      return this.getUserByLegacyIdentity(identity)
+    }
+
     try {
       const relation = await this.client.relation({
         objectType: "user",
@@ -178,5 +163,30 @@ export class Directory {
     } catch (e) {
       console.error(e);
     }
+  }
+}
+
+
+const isLegacy = async (dirClient: DirectoryClient): Promise<boolean> => {
+  try {
+    await dirClient.relation({
+      objectType: "identity",
+      objectId: "todoDemoIdentity",
+      relation: "identifier",
+      subjectType: "user",
+      subjectId: "todoDemoUser"
+    });
+    return true;
+  } catch (e) {
+    if (e instanceof InvalidArgumentError) {
+      // There is no identity#identifier relation. We're using new style identities.
+      return false;
+    }
+    if (e instanceof NotFoundError) {
+      // The relation doesn't exist but the types are valid. The model uses legacy
+      // identities.
+      return true;
+    }
+    throw e;
   }
 }

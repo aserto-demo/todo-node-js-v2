@@ -92,11 +92,7 @@ Store.open().then((store) => {
       }
 
       if (req.auth.sub === userID) {
-        if (await server.isLegacy) {
-          user = await server.directory.getUserByLegacyIdentity(userID);
-        } else {
-          user = await server.directory.getUserByIdentity(userID);
-        }
+        user = await server.directory.getUserByIdentity(userID);
       } else {
         user = await server.directory.getUserById(userID);
       }

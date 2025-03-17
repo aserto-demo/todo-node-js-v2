@@ -8,12 +8,10 @@ import { Directory } from "./directory";
 export class Server {
   store: Store;
   directory: Directory;
-  isLegacy: Promise<boolean>
 
   constructor(store: Store) {
     this.store = store;
     this.directory = new Directory({});
-    this.isLegacy = this.directory.isLegacy()
   }
 
   async list(_: Request, res: Response) {
@@ -22,16 +20,10 @@ export class Server {
   }
 
   async create(req: JWTRequest, res: Response) {
-    let user: User
     const todo: Todo = req.body;
     todo.ID = uuidv4();
     try {
-      if (await this.isLegacy) {
-        user = await this.directory.getUserByLegacyIdentity(req.auth.sub);
-      } else {
-        user = await this.directory.getUserByIdentity(req.auth.sub);
-      }
-
+      const user = await this.directory.getUserByIdentity(req.auth.sub);
       todo.OwnerID = user.id;
 
       await this.store.insert(todo);
