@@ -1,16 +1,17 @@
-import { create } from "@bufbuild/protobuf";
 import { User, Todo } from "./interfaces";
 import {
   DirectoryV3 as DirectoryClient,
   DirectoryV3Config,
   DirectoryServiceV3,
-  AccountPropertiesSchema,
-  TenantPropertiesSchema,
   UserPropertiesSchema,
+  fromJson,
+  InvalidArgumentError,
+  NotFoundError,
 } from "@aserto/aserto-node";
 
 export class Directory {
   client: DirectoryClient;
+  isLegacy: Promise<boolean>;
 
   constructor(config: DirectoryV3Config) {
     const url = config.url ?? process.env.ASERTO_DIRECTORY_SERVICE_URL;
@@ -34,36 +35,92 @@ export class Directory {
       rejectUnauthorized,
       caFile: caFile,
     });
+
+    this.isLegacy = isLegacy(this.client)
+  }
+
+
+  private async getUserByLegacyIdentity(identity: string): Promise<User> {
+    try {
+      const relation = await this.client.relation({
+        subjectType: "user",
+        objectType: "identity",
+        objectId: identity,
+        relation: "identifier",
+        withObjects: true,
+      });
+
+      const userID = relation.result.subjectId
+      const user = relation.objects[`user:${userID}`]
+
+      const { email, picture } = fromJson(
+        UserPropertiesSchema,
+        user.properties,
+        { ignoreUnknownFields: true }
+      )
+
+      return {
+        id: user.id,
+        name: user.displayName,
+        email: email,
+        picture: picture,
+      };
+    } catch (e) {
+      if (e instanceof NotFoundError) {
+        console.error(e);
+        return
+      }
+      throw e
+    }
+
   }
 
   async getUserByIdentity(identity: string): Promise<User> {
-    const relation = await this.client.relation({
-      subjectType: "user",
-      objectType: "identity",
-      objectId: identity,
-      relation: "identifier",
-    });
-
-    if (!relation || !relation.result) {
-      throw new Error(`No relations found for identity ${identity}`);
+    if (await this.isLegacy) {
+      return this.getUserByLegacyIdentity(identity)
     }
 
-    const user = (await this.client.object({
-      objectId: relation.result.subjectId,
-      objectType: relation.result.subjectType,
-    })).result;
-    const { email, picture } = create(UserPropertiesSchema,  user.properties)
-    return {
-      id: user.id,
-      name: user.displayName,
-      email: email,
-      picture: picture,
-    };
+    try {
+      const relation = await this.client.relation({
+        objectType: "user",
+        subjectType: "identity",
+        subjectId: identity,
+        relation: "identifier",
+        withObjects: true,
+      });
+
+      const userID = relation.result.objectId
+      const user = relation.objects[`user:${userID}`]
+
+      const { email, picture } = fromJson(
+        UserPropertiesSchema,
+        user.properties,
+        { ignoreUnknownFields: true }
+      )
+
+      return {
+        id: user.id,
+        name: user.displayName,
+        email: email,
+        picture: picture,
+      };
+    } catch (e) {
+      if (e instanceof NotFoundError) {
+        console.error(e);
+        return
+      }
+    }
+
   }
 
   async getUserById(id: string): Promise<User> {
     const user = (await this.client.object({ objectId: id, objectType: "user" })).result;
-    const { email, picture } = create(UserPropertiesSchema,  user.properties)
+    const { email, picture } = fromJson(
+      UserPropertiesSchema,
+      user.properties,
+      { ignoreUnknownFields: true }
+    )
+
     return {
       id: user.id,
       name: user.displayName,
@@ -105,5 +162,30 @@ export class Directory {
     } catch (e) {
       console.error(e);
     }
+  }
+}
+
+
+const isLegacy = async (dirClient: DirectoryClient): Promise<boolean> => {
+  try {
+    await dirClient.relation({
+      objectType: "identity",
+      objectId: "todoDemoIdentity",
+      relation: "identifier",
+      subjectType: "user",
+      subjectId: "todoDemoUser"
+    });
+    return true;
+  } catch (e) {
+    if (e instanceof InvalidArgumentError) {
+      // There is no identity#identifier relation. We're using new style identities.
+      return false;
+    }
+    if (e instanceof NotFoundError) {
+      // The relation doesn't exist but the types are valid. The model uses legacy
+      // identities.
+      return true;
+    }
+    throw e;
   }
 }

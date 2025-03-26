@@ -30,7 +30,7 @@ export class Server {
       await this.directory.insertTodo(todo);
       res.json({ msg: "Todo created" });
     } catch (error) {
-      res.status(422).send({error: (error as Error).message})
+      res.status(422).send({ error: (error as Error).message })
     }
   }
 
