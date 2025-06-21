@@ -13,8 +13,8 @@ Rename the `.env.example` file to `.env` and update the `ASERTO_AUTHORIZER_CERT_
 `ASERTO_DIRECTORY_REJECT_UNAUTHORIZED=false` will let you connect to a local directory without passing the certificate.
 
 ```
-JWKS_URI=https://citadel.demo.aserto.com/dex/keys
-ISSUER=https://citadel.demo.aserto.com/dex
+JWKS_URI=https://citadel.authzen-interop.net/dex/keys
+ISSUER=https://citadel.authzen-interop.net/dex
 AUDIENCE=citadel-app
 
 ASERTO_POLICY_ROOT=todoApp
